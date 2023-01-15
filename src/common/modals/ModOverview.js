@@ -153,11 +153,11 @@ const ModOverview = ({
                     </div>
                   )}
                   <div>
-                    <label>Last Update: </label>{' '}
+                    <label>Last Updated: </label>{' '}
                     {formatDate(addon?.dateModified)}
                   </div>
                   <div>
-                    <label>MC version: </label>
+                    <label>Minecraft Vesrion: </label>
                     {addon?.latestFilesIndexes[0]?.gameVersion}
                   </div>
                 </ParallaxContentInfos>

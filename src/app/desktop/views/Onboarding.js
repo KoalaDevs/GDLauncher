@@ -10,9 +10,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import backgroundVideo from '../../../common/assets/onboarding.webm';
 import { _getCurrentAccount } from '../../../common/utils/selectors';
-import BisectHosting from '../../../ui/BisectHosting';
 import KoFiButton from '../../../common/assets/ko-fi.png';
-import { openModal } from '../../../common/reducers/modals/actions';
 
 const Background = styled.div`
   position: absolute;
@@ -125,7 +123,7 @@ const Home = () => {
             padding: 0 120px;
           `}
         >
-          {account.selectedProfile.name}, welcome to GDLauncher!
+          {account.selectedProfile.name}, welcome to KoalaLauncher!
         </div>
       </div>
       <div
@@ -153,17 +151,6 @@ const Home = () => {
           our official partner!
           <br />
           <br />
-          <div
-            css={`
-              cursor: pointer;
-            `}
-          >
-            <BisectHosting
-              showPointerCursor
-              size={100}
-              onClick={() => dispatch(openModal('BisectHosting'))}
-            />
-          </div>
         </div>
       </div>
       <div

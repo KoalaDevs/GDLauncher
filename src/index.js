@@ -19,7 +19,7 @@ import ModalsManager from './common/components/ModalsManager';
 // import { version } from '../package.json';
 
 import 'typeface-roboto';
-import 'inter-ui';
+import 'typeface-averia-sans-libre';
 import ErrorBoundary from './common/ErrorBoundary';
 
 const Root =

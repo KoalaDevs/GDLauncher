@@ -3151,7 +3151,6 @@ export function launchInstance(instanceName, forceQuit = false) {
       return;
     }
     ga.sendCustomEvent('launchedInstance');
-    dispatch(openModal('InstanceStartupAd', { instanceName }));
 
     const getJvmArguments =
       mcJson.assets !== 'legacy' && gte(coerce(mcJson.assets), coerce('1.13'))
@@ -3271,10 +3270,7 @@ export function launchInstance(instanceName, forceQuit = false) {
         data.toString().includes('Setting user:') ||
         data.toString().includes('Initializing LWJGL OpenAL')
       ) {
-        if (
-          !closed &&
-          getState().modals.find(v => v.modalType === 'InstanceStartupAd')
-        ) {
+        if (!closed) {
           closed = true;
           dispatch(closeModal());
         }
@@ -3290,10 +3286,7 @@ export function launchInstance(instanceName, forceQuit = false) {
         data.toString().includes('Setting user:') ||
         data.toString().includes('Initializing LWJGL OpenAL')
       ) {
-        if (
-          !closed &&
-          getState().modals.find(v => v.modalType === 'InstanceStartupAd')
-        ) {
+        if (!closed) {
           closed = true;
           dispatch(closeModal());
         }
@@ -3320,17 +3313,15 @@ export function launchInstance(instanceName, forceQuit = false) {
         fse.remove(symLinkDirPath);
       }
 
-      if (
-        !closed &&
-        getState().modals.find(v => v.modalType === 'InstanceStartupAd')
-      ) {
+      if (!closed) {
         dispatch(closeModal());
       }
 
-      if (code !== 0 && errorLogs) {
+      if (code !== 0) {
         setTimeout(() => {
           dispatch(
             openModal('InstanceCrashed', {
+              instanceName,
               code,
               errorLogs: errorLogs?.toString('utf8')
             })
@@ -3606,7 +3597,7 @@ export const initLatestMods = instanceName => {
 
 export const isNewVersionAvailable = async () => {
   const { data: latestReleases } = await axios.get(
-    'https://api.github.com/repos/gorilla-devs/GDLauncher/releases?per_page=10'
+    'https://api.github.com/repos/KoalaDevs/GDLauncher/releases?per_page=10'
   );
 
   const latestPrerelease = latestReleases.find(v => v.prerelease);
@@ -3662,7 +3653,7 @@ export const checkForPortableUpdates = () => {
 
     // Latest version has a value only if the user is not using the latest
     if (newVersion) {
-      const baseAssetUrl = `https://github.com/gorilla-devs/GDLauncher/releases/download/${newVersion?.tag_name}`;
+      const baseAssetUrl = `https://github.com/KoalaDevs/KoalaLauncher/releases/download/${newVersion?.tag_name}`;
       const { data: latestManifest } = await axios.get(
         `${baseAssetUrl}/${process.platform}_latest.json`
       );

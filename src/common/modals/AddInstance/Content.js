@@ -5,7 +5,8 @@ import { Transition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faLongArrowAltRight,
-  faArchive
+  faArchive,
+  faFire,
 } from '@fortawesome/free-solid-svg-icons';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Spin, Radio } from 'antd';
@@ -14,7 +15,6 @@ import FTBModpacks from './FTBModpacks';
 import Import from './Import';
 import NewInstance from './NewInstance';
 import minecraftIcon from '../../assets/minecraftIcon.png';
-import curseForgeIcon from '../../assets/curseforgeIcon.webp';
 import ftbIcon from '../../assets/ftbIcon.webp';
 
 const Content = ({
@@ -90,11 +90,11 @@ const Content = ({
                         width: 22px;
                       `}
                     />
-                    Vanilla
+                    Custom
                   </Radio.Button>
                   <Radio.Button value={1}>
-                    <img
-                      src={curseForgeIcon}
+                  <FontAwesomeIcon
+                      icon={faFire}
                       css={`
                         margin-right: 4px;
                         cursor: pointer;

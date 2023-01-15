@@ -16,14 +16,14 @@ import {
   faDownload,
   faEllipsisV,
   faCopy,
-  faFolder
+  faFolder,
+  faFire
 } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { Transition } from 'react-transition-group';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import fse from 'fs-extra';
 import makeDir from 'make-dir';
-import curseForgeIcon from '../../assets/curseforgeIcon.webp';
 import {
   _getInstance,
   _getInstancesPath,
@@ -361,9 +361,7 @@ const Row = memo(({ index, style, data }) => {
                 }
               }}
             />
-            {item.fileID && (
-              <img src={curseForgeIcon} height="15px" alt="curseforge" />
-            )}
+            {item.fileID && <FontAwesomeIcon icon={faFire} />}
           </div>
           <div
             onClick={() => {

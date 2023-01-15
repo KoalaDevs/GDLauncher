@@ -18,8 +18,8 @@ const AutoUpdatesNotAvailable = () => {
             margin-top: 20px;
           `}
         >
-          Please, update GDLauncher through your package manager or download the
-          new version from our website <a href="https://gdevs.io">here</a>
+          Please, update KoalaLauncher through your package manager or download
+          the new version from our website <a href="https://gdevs.io">here</a>
         </div>
       </Container>
     </Modal>

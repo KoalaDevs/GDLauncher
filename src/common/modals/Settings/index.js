@@ -154,7 +154,7 @@ export default function Settings() {
                 font-size: 16px;
               `}
             >
-              Support GDLauncher
+              Support KoalaLauncher
             </span>
             <div
               css={`

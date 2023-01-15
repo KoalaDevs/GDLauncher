@@ -149,13 +149,13 @@ const ModpackDescription = ({
                       : formatNumber(modpack.downloadCount)}
                   </div>
                   <div>
-                    <label>Last Update: </label>
+                    <label>Last Updated: </label>
                     {type === 'ftb'
                       ? formatDate(modpack.refreshed * 1000)
                       : formatDate(modpack.dateModified)}
                   </div>
                   <div>
-                    <label>MC version: </label>
+                    <label>Minecraft Vesrion: </label>
                     {type === 'ftb'
                       ? modpack.tags[0]?.name || '-'
                       : modpack.latestFilesIndexes[0].gameVersion}
