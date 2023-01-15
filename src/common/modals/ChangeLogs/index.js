@@ -1,6 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { memo, useState, useEffect, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { ipcRenderer } from 'electron';
 import TypeAnimation from 'react-type-animation';
@@ -12,7 +11,6 @@ import SocialButtons from '../../components/SocialButtons';
 import KoFiButton from '../../assets/ko-fi.png';
 import UpdateIllustration from '../../assets/update_illustration.png';
 import UpdateIllustrationChristmas from '../../assets/update_illustration_christmas.png';
-import { openModal } from '../../reducers/modals/actions';
 import ga from '../../utils/analytics';
 import changelog from './changeLog';
 
@@ -24,7 +22,7 @@ const UpdateRow = ({ header, content, advanced }) => {
       <span
         css={`
           color: ${props => props.theme.palette.text.third};
-        `}
+        `}g
       >
         {content}
       </span>
@@ -42,7 +40,7 @@ const UpdateRow = ({ header, content, advanced }) => {
           `}
         >
           <a
-            href={`https://github.com/gorilla-devs/GDLauncher/commit/${advanced.cm}`}
+            href={`https://github.com/KoalaDevs/GDLauncher/commit/${advanced.cm}`}
           >
             {advanced.cm}
           </a>
@@ -51,7 +49,7 @@ const UpdateRow = ({ header, content, advanced }) => {
               {' | '}
               {/* Yes, this was the best (and shortest) version to do this I could come up with */}
               <a
-                href={`https://github.com/gorilla-devs/GDLauncher/pull/${
+                href={`https://github.com/KoalaDevs/GDLauncher/pull/${
                   prSplit[0]
                 }${prSplit.length > 1 ? `/commits/${prSplit[1]}` : ''}`}
               >
@@ -70,7 +68,6 @@ const ChangeLogs = () => {
   const [version, setVersion] = useState(null);
   const [skipIObserver, setSkipIObserver] = useState(true);
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const dispatch = useDispatch();
   const { ref: intersectionObserverRef, inView: insectionObserverInView } =
     useInView({
       threshold: 0.3,
@@ -127,11 +124,6 @@ const ChangeLogs = () => {
       ga.sendCustomEvent('changelogModalReadAll');
     }
   }, [insectionObserverInView]);
-
-  const openBisectModal = () => {
-    dispatch(openModal('BisectHosting'));
-    ga.sendCustomEvent('changelogModalOpenBisect');
-  };
 
   const isChristmas =
     new Date().getMonth() === 11 &&
@@ -202,7 +194,6 @@ const ChangeLogs = () => {
           >
             If you appreciate our work, please consider supporting us through a
             donation or grab a server from our official partner{' '}
-            <span onClick={openBisectModal}>BisectHosting</span>
           </div>
           <div
             css={`

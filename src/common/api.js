@@ -12,7 +12,8 @@ import {
   MICROSOFT_XSTS_AUTH_URL,
   MINECRAFT_SERVICES_URL,
   FTB_API_URL,
-  JAVA_LATEST_MANIFEST_URL
+  JAVA_LATEST_MANIFEST_URL,
+  PASTEBIN_API_KEY
 } from './utils/constants';
 import { sortByDate, getMcManifestUrl } from './utils';
 import ga from './utils/analytics';
@@ -183,6 +184,25 @@ export const imgurPost = (image, onProgress) => {
     },
     ...(onProgress && { onUploadProgress: onProgress })
   });
+};
+
+export const pasteBinPost = code => {
+  const bodyFormData = new FormData();
+  bodyFormData.append('api_dev_key', PASTEBIN_API_KEY);
+  bodyFormData.append('api_option', 'paste');
+  bodyFormData.append('api_paste_code', code);
+
+  const config = {
+    headers: {
+      'content-type': 'multipart/form-data'
+    }
+  };
+
+  return axios.post(
+    'https://pastebin.com/api/api_post.php',
+    bodyFormData,
+    config.headers
+  );
 };
 
 export const mcInvalidate = (accessToken, clientToken) => {

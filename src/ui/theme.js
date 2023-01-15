@@ -6,12 +6,12 @@ module.exports = {
     },
     primary: {
       light: '#5A7391',
-      main: '#365076',
+      main: '#6c5d53',
       dark: '#2B4066'
     },
     secondary: {
       light: '#54636D',
-      main: '#1B2533',
+      main: '#3d3d3d',
       dark: '#050818'
     },
     error: {
@@ -27,7 +27,7 @@ module.exports = {
       400: '#687780',
       500: '#54636D',
       600: '#2D3C49',
-      700: '#1B2533',
+      700: '#3d3d3d',
       800: '#121929',
       900: '#050818'
     },

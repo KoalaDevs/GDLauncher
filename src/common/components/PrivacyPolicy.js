@@ -19,8 +19,8 @@ const PrivacyPolicy = () => {
             >
               gdlauncher.com
             </a>{' '}
-            website (“Website”), “GDLauncher” application (“Application”), and
-            any of their related products and services (collectively,
+            website (“Website”), “KoalaLauncher” application (“Application”),
+            and any of their related products and services (collectively,
             “Services”), and our practices for collecting, using, maintaining,
             protecting, and disclosing that Personal Information. It also
             describes the choices available to you regarding our use of your

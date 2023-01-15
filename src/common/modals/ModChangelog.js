@@ -51,7 +51,7 @@ const ModChangelog = ({ modpackId, files, type, modpackName }) => {
         height: 500px;
         width: 650px;
       `}
-      title="Changelog"
+      title="Changelogs"
     >
       <div
         css={`

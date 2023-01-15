@@ -64,7 +64,6 @@ const modalsComponentLookupTable = {
   OptedOutModsList: AsyncComponent(
     lazy(() => import('../modals/OptedOutModsList'))
   ),
-  BisectHosting: AsyncComponent(lazy(() => import('../modals/BisectHosting'))),
   Onboarding: AsyncComponent(lazy(() => import('../modals/Onboarding'))),
   ModOverview: AsyncComponent(lazy(() => import('../modals/ModOverview'))),
   ModChangelog: AsyncComponent(lazy(() => import('../modals/ModChangelog'))),
@@ -79,9 +78,6 @@ const modalsComponentLookupTable = {
     lazy(() => import('../modals/McVersionChanger'))
   ),
   PolicyModal: AsyncComponent(lazy(() => import('../modals/PolicyModal'))),
-  InstanceStartupAd: AsyncComponent(
-    lazy(() => import('../modals/InstanceStartupAd'))
-  ),
   InstanceDownloadFailed: AsyncComponent(
     lazy(() => import('../modals/InstanceDownloadFailed'))
   ),

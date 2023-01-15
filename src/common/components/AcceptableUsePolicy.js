@@ -17,7 +17,7 @@ const AcceptableUsePolicy = () => {
             >
               gdlauncher.com
             </a>{' '}
-            website (“Website”), “GDLauncher” application (“Application”) and
+            website (“Website”), “KoalaLauncher” application (“Application”) and
             any of their related products and services (collectively,
             “Services”). This Policy is a legally binding agreement between you
             (“User”, “you” or “your”) and this Website operator and Application

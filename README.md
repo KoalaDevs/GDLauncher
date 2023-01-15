@@ -118,12 +118,14 @@ $ npm i
 Start the development environment
 
 ```sh
+$ export NODE_OPTIONS=--openssl-legacy-provider
 $ npm run dev
 ```
 
 For production environment...
 
 ```sh
+$ export NODE_OPTIONS=--openssl-legacy-provider
 $ npm run build && npm run start-prod
 ```
 
@@ -132,6 +134,7 @@ $ npm run build && npm run start-prod
 To package the app for the local platform:
 
 ```sh
+$ export NODE_OPTIONS=--openssl-legacy-provider
 $ npm run release
 ```
 
