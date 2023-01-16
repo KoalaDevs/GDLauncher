@@ -598,7 +598,7 @@ ipcMain.handle('openMainBrowserTo', (e, urls) => {
     start = 'xdg-open';
   }
   for (const url of urls) {
-    promisify(exec)(`${start} ${url}`);
+    exec(`${start} ${url}`);
   }
 });
 
