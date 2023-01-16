@@ -22,7 +22,8 @@ const UpdateRow = ({ header, content, advanced }) => {
       <span
         css={`
           color: ${props => props.theme.palette.text.third};
-        `}g
+        `}
+        g
       >
         {content}
       </span>
