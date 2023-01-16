@@ -582,6 +582,20 @@ ipcMain.handle('openFolder', (e, folderPath) => {
   shell.openPath(folderPath);
 });
 
+ipcMain.handle('openMainBrowserTo', (e, urls) => {
+  let start;
+  if (process.platform === 'darwin') {
+    start = 'open';
+  } else if (process.platform === 'win32') {
+    start = 'start';
+  } else {
+    start = 'xdg-open';
+  }
+  for (const url of urls) {
+    exec(`${start} ${url}`);
+  }
+});
+
 ipcMain.handle('open-devtools', () => {
   mainWindow.webContents.openDevTools({ mode: 'undocked' });
 });
@@ -784,6 +798,16 @@ ipcMain.handle('download-optedout-mods', async (e, { mods, instancePath }) => {
                 error: false,
                 warning: true
               });
+            } else if (details.statusCode === 403) {
+              // cloudflare
+              resolve();
+              mainWindow.webContents.send('opted-out-download-mod-status', {
+                modId: modManifest.id,
+                error: false,
+                warning: true,
+                cloudflareBlock: true,
+                urlDownloadPage
+              });
             }
           }
         );
@@ -934,7 +958,7 @@ ipcMain.handle('installUpdateAndQuitOrRestart', async (e, quitAfterInstall) => {
 
     await fs.writeFile(
       path.join(tempFolder, updaterVbs),
-      `Set WshShell = CreateObject("WScript.Shell") 
+      `Set WshShell = CreateObject("WScript.Shell")
           WshShell.Run chr(34) & "${path.join(
             tempFolder,
             updaterBat
