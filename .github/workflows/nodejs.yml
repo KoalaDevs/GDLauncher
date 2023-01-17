@@ -100,7 +100,7 @@ jobs:
       - uses: actions/upload-artifact@v1
         if: matrix.os == 'macos-latest'
         with:
-          name: MacOs Release
+          name: macOS Release
           path: deploy
 
       - uses: actions/upload-artifact@v1
