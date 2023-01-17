@@ -1,385 +1,226 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="utf-8" />
-  <link rel="icon" href="./icon.ico" />
-  <meta name="description" content="KoalaLauncher" />
-  <style>
-    .loader,
-    .loader:after {
-      border-radius: 50%;
-      width: 10em;
-      height: 10em
-    }
-
-    .loader {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      margin: 60px auto;
-      position: relative;
-      text-indent: -9999em
-    }
-
-    .loader svg {
-      z-index: 2;
-      width: 700px;
-      animation: spin 1.1s infinite ease-in-out;
-      transform: scale(4)
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0)
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/icon.ico" />
+    <meta
+      name="description"
+      content="KoalaLauncher -- A custom Minecraft launcher"
+    />
+    <style>
+      .loader,
+      .loader:after {
+        border-radius: 50%;
+        width: 10em;
+        height: 10em;
+      }
+      .loader {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 60px auto;
+        position: relative;
+        text-indent: -9999em;
       }
 
-      20% {
-        transform: rotate(-3.2deg)
+      .loader svg {
+        z-index: 2;
+        width: 700px;
+        animation: spin 1.1s infinite ease-in-out;
+        transform: scale(4);
       }
 
-      80% {
-        transform: rotate(360deg)
+      @keyframes spin {
+        0% {
+          transform: rotate(0);
+        }
+        20% {
+          transform: rotate(-3.2deg);
+        }
+        80% {
+          transform: rotate(360deg);
+        }
+        90% {
+          transform: rotate(370deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
+      /* @keyframes spin { 100% {  transform:rotate(360deg); } } */
+    </style>
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <script>
+      (function () {
+        if (process.env.NODE_ENV !== 'development') {
+          window.gaInitialized = true;
+          window.ga =
+            window.ga ||
+            function () {
+              (ga.q = ga.q || []).push(arguments);
+            };
+          ga.l = +new Date();
+          ga('create', 'UA-147631204-1', 'none');
+          ga('set', 'transport', 'xhr');
+          ga('set', 'appName', 'KoalaLauncher');
+          ga('set', 'checkProtocolTask', null);
+          ga('set', 'checkStorageTask', null);
+          ga('set', 'storage', 'none');
+          ga('set', 'storeGac', null);
+          ga('set', 'anonymizeIp', true);
+          ga('set', 'ds', 'app');
+        }
+      })();
+    </script>
 
-      90% {
-        transform: rotate(370deg)
-      }
+    <script>
+      !(function () {
+        'use strict';
+        var i = {};
+        var a = window.location,
+          r = window.document,
+          o = r.currentScript,
+          l =
+            o.getAttribute('data-api') || 'https://plausible.io' + '/api/event';
+        function s(e) {
+          console.warn('Ignoring Event: ' + e);
+        }
+        function e(e, t) {
+          if (
+            /^localhost$|^127(\.[0-9]+){0,2}\.[0-9]+$|^\[::1?\]$/.test(
+              a.hostname
+            )
+          )
+            return s('localhost');
+          if (
+            !(
+              window._phantom ||
+              window.__nightmare ||
+              window.navigator.webdriver ||
+              window.Cypress
+            )
+          ) {
+            try {
+              if ('true' === window.localStorage.plausible_ignore)
+                return s('localStorage flag');
+            } catch (e) {}
+            (i.n = e),
+              (i.d = 'app.gdevs.io'),
+              (i.r = 'https://app.gdevs.io'),
+              (i.w = window.innerWidth),
+              t && t.meta && (i.m = JSON.stringify(t.meta)),
+              t && t.props && (i.p = t.props),
+              (i.h = 1);
+            var n = new XMLHttpRequest();
+            n.open('POST', l, !0),
+              n.setRequestHeader('Content-Type', 'text/plain'),
+              n.send(JSON.stringify(i)),
+              (n.onreadystatechange = function () {
+                4 === n.readyState && t && t.callback && t.callback();
+              });
+          }
+        }
+        var t = (window.plausible && window.plausible.q) || [];
+        window.plausible = e;
+        for (var i, n = 0; n < t.length; n++) e.apply(this, t[n]);
+        function w() {
+          (i.u = 'https://app.gdevs.io' + a.hash.slice(1)),
+            e('pageview', { props: { version: '1.1.29' } });
+        }
+        window.addEventListener('hashchange', w),
+          'prerender' === r.visibilityState
+            ? r.addEventListener('visibilitychange', function () {
+                i || 'visible' !== r.visibilityState || w();
+              })
+            : w();
+      })();
+    </script>
 
-      100% {
-        transform: rotate(360deg)
-      }
-    }
-  </style>
-  <link rel="manifest" href="./manifest.json" />
-  <script>
-    "development" !== process.env.NODE_ENV && (window.ga = window.ga || function () {
-      (ga.q = ga.q || []).push(arguments)
-    }, ga.l = +new Date, ga("create", "UA-147631204-1", "none"), ga("set", "transport", "xhr"), ga("set", "appName",
-      "KoalaLauncher"), ga("set", "checkProtocolTask", null), ga("set", "checkStorageTask", null), ga("set",
-      "storage", "none"), ga("set", "storeGac", null), ga("set", "anonymizeIp", !0), ga("set", "ds", "app"))
-  </script>
-  <script async src="https://www.google-analytics.com/analytics.js"></script>
-  <title>KoalaLauncher</title>
-  <link href="./static/css/11.5885e7f4.chunk.css" rel="stylesheet">
-</head>
+    <script async src="https://www.google-analytics.com/analytics.js"></script>
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
 
-<body><noscript>You need to enable JavaScript to run this app.</noscript>
-  <div id="root">
-    <div style="width:100%;height:95vh;display:flex;justify-content:center;align-items:center">
-      <div class="loader"><svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1080 1080"
-          style="enable-background:new 0 0 1080 1080" xml:space="preserve">
-          <style>
-            .st0 {
-              fill: #6c5d53
-            }
-
-            .st1 {
-              fill: #fff
-            }
-          </style>
-          <g>
-            <polygon class="st0" points="996,276.7 540,13.5 84,276.7 84,803.3 540,1066.5 996,803.3 	" />
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>KoalaLauncher</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root">
+      <div
+        style="
+          width: 100%;
+          height: 95vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        "
+      >
+        <div class="loader">
+          <svg
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px"
+            y="0px"
+            viewBox="0 0 1080 1080"
+            style="enable-background: new 0 0 1080 1080"
+            xml:space="preserve"
+          >
+            <style type="text/css">
+              .st0 {
+                fill: #6c5d53;
+              }
+              .st1 {
+                fill: #ffffff;
+              }
+            </style>
             <g>
-              <path class="st1"
-                d="M540,797.5L540,797.5c77.7,0,140.7-63,140.7-140.7v-23.9c0-2,1.2-3.9,3.1-4.6
+              <polygon
+                class="st0"
+                points="996,276.7 540,13.5 84,276.7 84,803.3 540,1066.5 996,803.3 	"
+              />
+              <g>
+                <path
+                  class="st1"
+                  d="M540,797.5L540,797.5c77.7,0,140.7-63,140.7-140.7v-23.9c0-2,1.2-3.9,3.1-4.6
              c21.8-8.8,150.6-66.2,133.6-193.2c-18.3-136.9-188.3-115.4-274-33.6c-1.9,1.8-4.9,1.8-6.9,0c-85.7-81.8-255.7-103.2-274,33.6
-             c-17,127,111.8,184.4,133.6,193.2c1.9,0.8,3.1,2.6,3.1,4.6v23.9C399.3,734.6,462.3,797.5,540,797.5L540,797.5L540,797.5z" />
-              <g>
-                <path class="st0" d="M479.8,526.4c0.4,4.8-5.5,7.5-8.7,3.8c-10.3-12-30-29.1-62.9-38.2c-54-15,3.3-46.9,25.4-36.5
-               C453.6,465,475.6,478.1,479.8,526.4z" />
-                <path class="st0" d="M600.2,526.4c-0.4,4.8,5.5,7.5,8.7,3.8c10.3-12,30-29.1,62.9-38.2c54-15-3.3-46.9-25.4-36.5
-               C626.4,465,604.4,478.1,600.2,526.4z" />
-              </g>
-              <g>
-                <path class="st0" d="M571.8,598.1c7.4,16.4,19.2,49,8.9,72.1c-1.4,3.2-5.8,3.8-8.2,1.1c-8.4-9.5-23.6-33.4-10-72.7
-               C564,594.3,570,594,571.8,598.1z" />
-                <path class="st0" d="M508.2,598.1c-7.4,16.4-19.2,49-8.9,72.1c1.4,3.2,5.8,3.8,8.2,1.1c8.4-9.5,23.6-33.4,10-72.7
-               C516,594.3,510,594,508.2,598.1z" />
+             c-17,127,111.8,184.4,133.6,193.2c1.9,0.8,3.1,2.6,3.1,4.6v23.9C399.3,734.6,462.3,797.5,540,797.5L540,797.5L540,797.5z"
+                />
+                <g>
+                  <path
+                    class="st0"
+                    d="M479.8,526.4c0.4,4.8-5.5,7.5-8.7,3.8c-10.3-12-30-29.1-62.9-38.2c-54-15,3.3-46.9,25.4-36.5
+               C453.6,465,475.6,478.1,479.8,526.4z"
+                  />
+                  <path
+                    class="st0"
+                    d="M600.2,526.4c-0.4,4.8,5.5,7.5,8.7,3.8c10.3-12,30-29.1,62.9-38.2c54-15-3.3-46.9-25.4-36.5
+               C626.4,465,604.4,478.1,600.2,526.4z"
+                  />
+                </g>
+                <g>
+                  <path
+                    class="st0"
+                    d="M571.8,598.1c7.4,16.4,19.2,49,8.9,72.1c-1.4,3.2-5.8,3.8-8.2,1.1c-8.4-9.5-23.6-33.4-10-72.7
+               C564,594.3,570,594,571.8,598.1z"
+                  />
+                  <path
+                    class="st0"
+                    d="M508.2,598.1c-7.4,16.4-19.2,49-8.9,72.1c1.4,3.2,5.8,3.8,8.2,1.1c8.4-9.5,23.6-33.4,10-72.7
+               C516,594.3,510,594,508.2,598.1z"
+                  />
+                </g>
               </g>
             </g>
-          </g>
-        </svg></div>
+          </svg>
+        </div>
+      </div>
     </div>
-  </div>
-  <script>
-    ! function (e) {
-      function t(t) {
-        for (var c, f, d = t[0], o = t[1], u = t[2], i = 0, b = []; i < d.length; i++) f = d[i], Object.prototype
-          .hasOwnProperty.call(n, f) && n[f] && b.push(n[f][0]), n[f] = 0;
-        for (c in o) Object.prototype.hasOwnProperty.call(o, c) && (e[c] = o[c]);
-        for (l && l(t); b.length;) b.shift()();
-        return a.push.apply(a, u || []), r()
-      }
-
-      function r() {
-        for (var e, t = 0; t < a.length; t++) {
-          for (var r = a[t], c = !0, f = 1; f < r.length; f++) {
-            var o = r[f];
-            0 !== n[o] && (c = !1)
-          }
-          c && (a.splice(t--, 1), e = d(d.s = r[0]))
-        }
-        return e
-      }
-      var c = {},
-        f = {
-          10: 0
-        },
-        n = {
-          10: 0
-        },
-        a = [];
-
-      function d(t) {
-        if (c[t]) return c[t].exports;
-        var r = c[t] = {
-          i: t,
-          l: !1,
-          exports: {}
-        };
-        return e[t].call(r.exports, r, r.exports, d), r.l = !0, r.exports
-      }
-      d.e = function (e) {
-        var t = [];
-        f[e] ? t.push(f[e]) : 0 !== f[e] && {
-          2: 1,
-          4: 1,
-          5: 1,
-          8: 1,
-          16: 1,
-          17: 1,
-          18: 1,
-          19: 1,
-          20: 1,
-          21: 1,
-          22: 1,
-          23: 1,
-          24: 1,
-          25: 1,
-          26: 1,
-          27: 1,
-          28: 1,
-          29: 1,
-          33: 1,
-          34: 1
-        } [e] && t.push(f[e] = new Promise((function (t, r) {
-          for (var c = "static/css/" + ({} [e] || e) + "." + {
-              0: "31d6cfe0",
-              1: "31d6cfe0",
-              2: "6fb52245",
-              3: "31d6cfe0",
-              4: "051bcb60",
-              5: "f831f9fd",
-              6: "31d6cfe0",
-              7: "31d6cfe0",
-              8: "e9e93d38",
-              12: "31d6cfe0",
-              13: "31d6cfe0",
-              14: "31d6cfe0",
-              15: "31d6cfe0",
-              16: "471a5127",
-              17: "936be66d",
-              18: "80b1edd5",
-              19: "c25df6b6",
-              20: "956fb0b4",
-              21: "348efcc7",
-              22: "348efcc7",
-              23: "36a45cbc",
-              24: "ac7b187a",
-              25: "aafbb073",
-              26: "9f85b43b",
-              27: "9f85b43b",
-              28: "e21c40f9",
-              29: "8f96ccae",
-              30: "31d6cfe0",
-              31: "31d6cfe0",
-              32: "31d6cfe0",
-              33: "632ca40d",
-              34: "632ca40d",
-              35: "31d6cfe0",
-              36: "31d6cfe0",
-              37: "31d6cfe0",
-              38: "31d6cfe0",
-              39: "31d6cfe0",
-              40: "31d6cfe0",
-              41: "31d6cfe0",
-              42: "31d6cfe0",
-              43: "31d6cfe0",
-              44: "31d6cfe0",
-              45: "31d6cfe0",
-              46: "31d6cfe0",
-              47: "31d6cfe0",
-              48: "31d6cfe0",
-              49: "31d6cfe0",
-              50: "31d6cfe0",
-              51: "31d6cfe0",
-              52: "31d6cfe0",
-              53: "31d6cfe0",
-              54: "31d6cfe0",
-              55: "31d6cfe0",
-              56: "31d6cfe0",
-              57: "31d6cfe0",
-              58: "31d6cfe0",
-              59: "31d6cfe0"
-            } [e] + ".chunk.css", n = d.p + c, a = document.getElementsByTagName("link"), o = 0; o < a
-            .length; o++) {
-            var u = (l = a[o]).getAttribute("data-href") || l.getAttribute("href");
-            if ("stylesheet" === l.rel && (u === c || u === n)) return t()
-          }
-          var i = document.getElementsByTagName("style");
-          for (o = 0; o < i.length; o++) {
-            var l;
-            if ((u = (l = i[o]).getAttribute("data-href")) === c || u === n) return t()
-          }
-          var b = document.createElement("link");
-          b.rel = "stylesheet", b.type = "text/css", b.onload = t, b.onerror = function (t) {
-            var c = t && t.target && t.target.src || n,
-              a = new Error("Loading CSS chunk " + e + " failed.\n(" + c + ")");
-            a.code = "CSS_CHUNK_LOAD_FAILED", a.request = c, delete f[e], b.parentNode.removeChild(b), r(a)
-          }, b.href = n, document.getElementsByTagName("head")[0].appendChild(b)
-        })).then((function () {
-          f[e] = 0
-        })));
-        var r = n[e];
-        if (0 !== r)
-          if (r) t.push(r[2]);
-          else {
-            var c = new Promise((function (t, c) {
-              r = n[e] = [t, c]
-            }));
-            t.push(r[2] = c);
-            var a, o = document.createElement("script");
-            o.charset = "utf-8", o.timeout = 120, d.nc && o.setAttribute("nonce", d.nc), o.src = function (e) {
-              return d.p + "static/js/" + ({} [e] || e) + "." + {
-                0: "69f62f35",
-                1: "d77ee709",
-                2: "ae75bcf1",
-                3: "991c8f86",
-                4: "fe18c5ac",
-                5: "3e5c0d46",
-                6: "e6b7d96c",
-                7: "aba164d4",
-                8: "a5898f07",
-                12: "850535fc",
-                13: "ee6a62d0",
-                14: "856794dd",
-                15: "e31ec579",
-                16: "3b0f2664",
-                17: "89ab1fda",
-                18: "1f004017",
-                19: "7a30178c",
-                20: "7a05ca36",
-                21: "d38d93d7",
-                22: "f89e369b",
-                23: "71b8bb50",
-                24: "cf070563",
-                25: "2354d618",
-                26: "a1ed8b72",
-                27: "2b4ae84a",
-                28: "ded5f3d2",
-                29: "7dc144bd",
-                30: "01682c5d",
-                31: "cebd5230",
-                32: "95f315bc",
-                33: "0bb5f936",
-                34: "6607a203",
-                35: "f3c38ed6",
-                36: "66b3dd30",
-                37: "439e0f8f",
-                38: "4ab9636c",
-                39: "841ff278",
-                40: "d6f202a4",
-                41: "4b73c0cd",
-                42: "3e5e4175",
-                43: "8bf20593",
-                44: "0911641c",
-                45: "f58a4f6b",
-                46: "28731a04",
-                47: "bd507da0",
-                48: "f5278f00",
-                49: "559c5267",
-                50: "651887ee",
-                51: "c7467ff2",
-                52: "ebb39a4f",
-                53: "1ffdb783",
-                54: "67ba08da",
-                55: "6f61cb43",
-                56: "855cac5d",
-                57: "264ff8db",
-                58: "c7851cb5",
-                59: "f1a3adaf"
-              } [e] + ".chunk.js"
-            }(e);
-            var u = new Error;
-            a = function (t) {
-              o.onerror = o.onload = null, clearTimeout(i);
-              var r = n[e];
-              if (0 !== r) {
-                if (r) {
-                  var c = t && ("load" === t.type ? "missing" : t.type),
-                    f = t && t.target && t.target.src;
-                  u.message = "Loading chunk " + e + " failed.\n(" + c + ": " + f + ")", u.name = "ChunkLoadError",
-                    u.type = c, u.request = f, r[1](u)
-                }
-                n[e] = void 0
-              }
-            };
-            var i = setTimeout((function () {
-              a({
-                type: "timeout",
-                target: o
-              })
-            }), 12e4);
-            o.onerror = o.onload = a, document.head.appendChild(o)
-          } return Promise.all(t)
-      }, d.m = e, d.c = c, d.d = function (e, t, r) {
-        d.o(e, t) || Object.defineProperty(e, t, {
-          enumerable: !0,
-          get: r
-        })
-      }, d.r = function (e) {
-        "undefined" != typeof Symbol && Symbol.toStringTag && Object.defineProperty(e, Symbol.toStringTag, {
-          value: "Module"
-        }), Object.defineProperty(e, "__esModule", {
-          value: !0
-        })
-      }, d.t = function (e, t) {
-        if (1 & t && (e = d(e)), 8 & t) return e;
-        if (4 & t && "object" == typeof e && e && e.__esModule) return e;
-        var r = Object.create(null);
-        if (d.r(r), Object.defineProperty(r, "default", {
-            enumerable: !0,
-            value: e
-          }), 2 & t && "string" != typeof e)
-          for (var c in e) d.d(r, c, function (t) {
-            return e[t]
-          }.bind(null, c));
-        return r
-      }, d.n = function (e) {
-        var t = e && e.__esModule ? function () {
-          return e.default
-        } : function () {
-          return e
-        };
-        return d.d(t, "a", t), t
-      }, d.o = function (e, t) {
-        return Object.prototype.hasOwnProperty.call(e, t)
-      }, d.p = "./", d.oe = function (e) {
-        throw console.error(e), e
-      };
-      var o = this.webpackJsonpKoalaLauncher = this.webpackJsonpKoalaLauncher || [],
-        u = o.push.bind(o);
-      o.push = t, o = o.slice();
-      for (var i = 0; i < o.length; i++) t(o[i]);
-      var l = u;
-      r()
-    }([])
-  </script>
-  <script src="./static/js/11.7bf17ab1.chunk.js"></script>
-  <script src="./static/js/main.1307be32.chunk.js"></script>
-</body>
-
+  </body>
 </html>
