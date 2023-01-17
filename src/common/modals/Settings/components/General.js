@@ -15,7 +15,6 @@ import {
   faToilet,
   faNewspaper,
   faFolder,
-  faFire,
   faSort
 } from '@fortawesome/free-solid-svg-icons';
 import { Select, Tooltip, Button, Switch, Input, Checkbox } from 'antd';
@@ -38,6 +37,7 @@ import { updateConcurrentDownloads } from '../../../reducers/actions';
 import { openModal } from '../../../reducers/modals/actions';
 import HorizontalLogo from '../../../../ui/HorizontalLogo';
 import { extractFace } from '../../../../app/desktop/utils';
+import curseforgeIcon from '../../../assets/curseforgeIcon.webp';
 
 const Title = styled.div`
   margin-top: 30px;
@@ -395,7 +395,16 @@ const General = () => {
         </Select>
       </Content>
       <Title>
-        Preferred Curse Release Channel &nbsp; <FontAwesomeIcon icon={faFire} />
+        Preferred Curse Release Channel &nbsp;{' '}
+        <img
+          src={curseforgeIcon}
+          alt="CurseForge"
+          css={`
+            margin-right: 4px;
+            cursor: pointer;
+            width: 22px;
+          `}
+        />
       </Title>
       <Content>
         <p>
