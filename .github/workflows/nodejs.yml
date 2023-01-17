@@ -29,7 +29,8 @@ jobs:
       - name: Use Node.js 16.17.0
         uses: actions/setup-node@v1
         with:
-          node-version: '16.17.0'
+          node-version: '19.3.0'
+
 
       - name: Install Nightly
         run: |
