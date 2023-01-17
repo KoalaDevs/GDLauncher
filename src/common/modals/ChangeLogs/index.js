@@ -41,7 +41,7 @@ const UpdateRow = ({ header, content, advanced }) => {
           `}
         >
           <a
-            href={`https://github.com/KoalaDevs/GDLauncher/commit/${advanced.cm}`}
+            href={`https://github.com/KoalaDevs/KoalaLauncher/commit/${advanced.cm}`}
           >
             {advanced.cm}
           </a>
@@ -50,7 +50,7 @@ const UpdateRow = ({ header, content, advanced }) => {
               {' | '}
               {/* Yes, this was the best (and shortest) version to do this I could come up with */}
               <a
-                href={`https://github.com/KoalaDevs/GDLauncher/pull/${
+                href={`https://github.com/KoalaDevs/KoalaLauncher/pull/${
                   prSplit[0]
                 }${prSplit.length > 1 ? `/commits/${prSplit[1]}` : ''}`}
               >
@@ -217,7 +217,7 @@ const ChangeLogs = () => {
               }
             `}
           >
-            <a href="https://ko-fi.com/gdlauncher">
+            <a href="https://ko-fi.com/KoalaLauncher">
               <img src={KoFiButton} alt="Ko-Fi" />
             </a>
           </div>

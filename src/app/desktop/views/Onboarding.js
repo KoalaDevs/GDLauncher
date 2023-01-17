@@ -146,7 +146,7 @@ const Home = () => {
             margin: 20% 10%;
           `}
         >
-          GDlauncher is completely free and open source. <br />
+          KoalaLauncher is completely free and open source. <br />
           If you want to support us, consider renting a server on BisectHosting,
           our official partner!
           <br />
@@ -179,7 +179,7 @@ const Home = () => {
               margin: 40px;
             `}
           >
-            <a href="https://ko-fi.com/gdlauncher">
+            <a href="https://ko-fi.com/KoalaLauncher">
               <img src={KoFiButton} alt="Ko-Fi" />
             </a>
           </div>

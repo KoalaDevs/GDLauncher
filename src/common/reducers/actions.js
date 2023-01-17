@@ -88,6 +88,7 @@ import {
   convertCompletePathToInstance,
   convertcurseForgeToCanonical,
   copyAssetsToLegacy,
+  addGlobalSettings,
   copyAssetsToResources,
   downloadAddonZip,
   extractAll,
@@ -934,6 +935,15 @@ export function removeStartedInstance(instanceName) {
     dispatch({
       type: ActionTypes.REMOVE_STARTED_INSTANCE,
       instanceName
+    });
+  };
+}
+
+export function setHasStartedCliInstance(value) {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.UPDATE_HAS_STARTED_CLI_INSTANCE,
+      value
     });
   };
 }
@@ -2226,6 +2236,80 @@ export function downloadInstance(instanceName) {
       else if (manifest && loader?.source === CURSEFORGE)
         await dispatch(processForgeManifest(instanceName));
 
+      // Adding global settings
+
+      const instancePath = path.join(_getInstancesPath(state), instanceName);
+      const filePath = `${instancePath}/options.txt`;
+
+      const fullScreen = state.settings.fullscreen;
+      const { autoJump } = state.settings;
+      const { guiScale } = state.settings;
+      const { fov } = state.settings;
+      const { fps } = state.settings;
+      const { renderDistance } = state.settings;
+      const { soundCategoryMaster } = state.settings;
+      const { soundCategoryMusik } = state.settings;
+      const { soundCategoryJukebox } = state.settings;
+      const { soundCategoryWeather } = state.settings;
+      const { soundCategoryBlocks } = state.settings;
+      const { soundCategoryHostile } = state.settings;
+      const { soundCategoryNeutral } = state.settings;
+      const { soundCategoryPlayer } = state.settings;
+      const { soundCategoryAmbient } = state.settings;
+      const { soundCategoryVoice } = state.settings;
+      const { vsync } = state.settings;
+
+      const data =
+        `fullscreen:${fullScreen}\n` +
+        `autoJump:${autoJump}\n` +
+        `guiScale:${guiScale}\n` +
+        `fov:${fov}\n` +
+        `maxFps:${fps}\n` +
+        `renderDistance:${renderDistance}\n` +
+        `soundCategory_master:${soundCategoryMaster}\n` +
+        `soundCategory_music:${soundCategoryMusik}\n` +
+        `soundCategory_record:${soundCategoryJukebox}\n` +
+        `soundCategory_weather:${soundCategoryWeather}\n` +
+        `soundCategory_blocks:${soundCategoryBlocks}\n` +
+        `soundCategory_hostile:${soundCategoryHostile}\n` +
+        `soundCategory_neutral:${soundCategoryNeutral}\n` +
+        `soundCategory_player:${soundCategoryPlayer}\n` +
+        `soundCategory_ambient:${soundCategoryAmbient}\n` +
+        `soundCategory_voice:${soundCategoryVoice}\n` +
+        `enableVsync:${vsync}`;
+      try {
+        if (!fss.existsSync(filePath)) {
+          fss.writeFile(filePath, data, err => {
+            // In case of a error throw err.
+            if (err) throw err;
+          });
+        }
+        /* TODO
+      else{
+        fs.readFile(filePath, 'utf8' , (err, datas) => {
+          if (err) {
+            console.error(err)
+            return
+          }
+          var splitted = data.split("\n");
+          for(var i=0; i < splitted.length; i++) {
+            var regex = new RegExp("(?<=" + splitted[i].split(":")[0] + ":)(.*)(?=\n)", "g");
+            var result = datas.replace(regex, splitted[i].split(":")[1]);
+            
+            console.log(result);
+          }
+        })
+      } */
+      } catch (err) {
+        console.error(err);
+      }
+      // Adding global settings
+      await addGlobalSettings(
+        path.join(_getInstancesPath(state), instanceName),
+        state.settings
+      );
+
+      // Finish here
       dispatch(updateDownloadProgress(0));
 
       // Be aware that from this line the installer lock might be unlocked!
@@ -3184,7 +3268,8 @@ export function launchInstance(instanceName, forceQuit = false) {
     }
 
     const replaceRegex = [
-      process.platform === 'win32' && gt(coerce(loader?.mcVersion), coerce('1.12.2'))
+      process.platform === 'win32' &&
+      gt(coerce(loader?.mcVersion), coerce('1.12.2'))
         ? new RegExp(userData.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1'), 'g')
         : null,
       replaceWith
@@ -3264,26 +3349,26 @@ export function launchInstance(instanceName, forceQuit = false) {
     );
     dispatch(updateStartedInstance({ instanceName, pid: ps.pid }));
 
-    const parseLog4J = (inputStr) => {
-      let l4jevts = inputStr.split("<log4j:Event");
+    const parseLog4J = inputStr => {
+      const l4jevts = inputStr.split('<log4j:Event');
       for (let evt of l4jevts) {
-        if (evt == "  ") continue;
-        evt = "<log4j:Event"+evt;
-        let splitQuotes = evt.split('"');
-        let logger = splitQuotes[1];
-        let level = splitQuotes[5];
-        let thread = splitQuotes[7];
-        let cdatas = inputStr.split("![CDATA[");
-        for (let str of cdatas) {
-          if (str.endsWith("><")) continue;
-          let strOnly = str.split("]]></log4j:Message")[0];
+        if (evt === '  ') continue;
+        evt = `<log4j:Event${evt}`;
+        const splitQuotes = evt.split('"');
+        const logger = splitQuotes[1];
+        const level = splitQuotes[5];
+        const thread = splitQuotes[7];
+        const cdatas = inputStr.split('![CDATA[');
+        for (const str of cdatas) {
+          if (str.endsWith('><')) continue;
+          const strOnly = str.split(']]></log4j:Message')[0];
           console.log(`[${thread}] [${logger}] [${level}] ${strOnly}`);
         }
       }
-    }
-    
+    };
+
     ps.stdout.on('data', data => {
-      if (data.toString().includes("log4j:Event")) {
+      if (data.toString().includes('log4j:Event')) {
         parseLog4J(data.toString());
       } else {
         console.log(data.toString());
@@ -3619,7 +3704,7 @@ export const initLatestMods = instanceName => {
 
 export const isNewVersionAvailable = async () => {
   const { data: latestReleases } = await axios.get(
-    'https://api.github.com/repos/KoalaDevs/GDLauncher/releases?per_page=10'
+    'https://api.github.com/repos/KoalaDevs/KoalaLauncher/releases?per_page=10'
   );
 
   const latestPrerelease = latestReleases.find(v => v.prerelease);
@@ -3631,7 +3716,7 @@ export const isNewVersionAvailable = async () => {
 
   try {
     const rChannel = await fs.readFile(
-      path.join(appData, 'gdlauncher_next', 'rChannel')
+      path.join(appData, 'koalalauncher', 'rChannel')
     );
     releaseChannel = parseInt(rChannel.toString(), 10);
   } catch {

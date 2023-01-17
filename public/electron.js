@@ -64,8 +64,8 @@ if (gotTheLock) {
   app.quit();
 }
 
-if (!app.isDefaultProtocolClient('gdlauncher')) {
-  app.setAsDefaultProtocolClient('gdlauncher');
+if (!app.isDefaultProtocolClient('KoalaLauncher')) {
+  app.setAsDefaultProtocolClient('KoalaLauncher');
 }
 
 // This gets rid of this: https://github.com/electron/electron/issues/13186
@@ -78,10 +78,10 @@ const edit = [
   ...(process.platform === 'darwin'
     ? [
         {
-          label: 'GDLauncher',
+          label: 'KoalaLauncher',
           submenu: [
             {
-              label: 'About GDLauncher',
+              label: 'About KoalaLauncher',
               role: 'about'
             },
             { type: 'separator' },
@@ -92,7 +92,7 @@ const edit = [
             },
             { type: 'separator' },
             {
-              label: 'Hide GDLauncher',
+              label: 'Hide KoalaLauncher',
               accelerator: 'Command+H',
               role: 'hide'
             },
@@ -107,7 +107,7 @@ const edit = [
             },
             { type: 'separator' },
             {
-              label: 'Quit GDLauncher',
+              label: 'Quit KoalaLauncher',
               accelerator: 'Command+Q',
               click: () => {
                 app.quit();
@@ -168,7 +168,7 @@ const userAgent = new UserAgent({
 // app.allowRendererProcessReuse = true;
 Menu.setApplicationMenu(Menu.buildFromTemplate(edit));
 
-app.setPath('userData', path.join(app.getPath('appData'), 'gdlauncher_next'));
+app.setPath('userData', path.join(app.getPath('appData'), 'koalalauncher'));
 
 let allowUnstableReleases = false;
 const releaseChannelExists = fss.existsSync(
@@ -348,7 +348,7 @@ function createWindow() {
   tray = new Tray(nimage);
   const trayMenuTemplate = [
     {
-      label: 'GDLauncher',
+      label: 'KoalaLauncher',
       enabled: false
     },
     {
@@ -359,7 +359,7 @@ function createWindow() {
 
   const trayMenu = Menu.buildFromTemplate(trayMenuTemplate);
   tray.setContextMenu(trayMenu);
-  tray.setToolTip('GDLauncher');
+  tray.setToolTip('KoalaLauncher');
   tray.on('double-click', () => mainWindow.show());
 
   mainWindow.loadURL(
@@ -367,7 +367,7 @@ function createWindow() {
       ? 'http://localhost:3000'
       : `file://${path.join(__dirname, '../build/index.html')}`,
     {
-      userAgent: 'GDLauncher'
+      userAgent: 'KoalaLauncher'
     }
   );
   if (isDev) {
@@ -914,8 +914,8 @@ if (process.env.REACT_APP_RELEASE_TYPE === 'setup') {
     !allowUnstableReleases && app.getVersion().includes('beta');
   autoUpdater.allowPrerelease = allowUnstableReleases;
   autoUpdater.setFeedURL({
-    owner: 'gorilla-devs',
-    repo: 'GDLauncher',
+    owner: 'KoalaDevs',
+    repo: 'KoalaLauncher',
     provider: 'github'
   });
 
@@ -980,4 +980,8 @@ ipcMain.handle('installUpdateAndQuitOrRestart', async (e, quitAfterInstall) => {
     updateSpawn.unref();
     mainWindow.close();
   }
+});
+
+ipcMain.handle('get-instance-cli-arg', () => {
+  return app.commandLine.getSwitchValue('instance');
 });

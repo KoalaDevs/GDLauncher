@@ -41,7 +41,7 @@ const calcError = code => {
 
 const { Panel } = Collapse;
 
-const InstanceCrashed = ({ instanceName, code, errorLogs }) => {
+const InstanceCrashed = ({ instanceName, code }) => {
   const [copiedLog, setCopiedLog] = useState(null);
   const [crashLog, setCrashLog] = useState(null);
   const instancesPath = useSelector(_getInstancesPath);
@@ -142,71 +142,6 @@ const InstanceCrashed = ({ instanceName, code, errorLogs }) => {
           defaultActiveKey={['1']}
           accordion
         >
-          <Panel
-            header={
-              <div
-                css={`
-                  display: flex;
-                  flex-direction: row;
-                  justify-content: space-between;
-                  align-items: center;
-                `}
-                key="1"
-              >
-                Error Log &nbsp;
-                <div
-                  css={`
-                    display: flex;
-                  `}
-                >
-                  <Tooltip
-                    title={copiedLog ? 'Copied Link' : 'Share'}
-                    placement="top"
-                  >
-                    <div
-                      css={`
-                        margin: 0;
-                      `}
-                    >
-                      <FontAwesomeIcon
-                        css={`
-                          margin: 0 20px;
-                        `}
-                        icon={faShare}
-                        onClick={e => share(e, errorLogs)}
-                      />
-                    </div>
-                  </Tooltip>
-                  <Tooltip
-                    title={copiedLog ? 'Copied' : 'Copy'}
-                    placement="top"
-                  >
-                    <div
-                      css={`
-                        margin: 0;
-                      `}
-                    >
-                      <FontAwesomeIcon
-                        icon={faCopy}
-                        onClick={e => copy(e, errorLogs)}
-                      />
-                    </div>
-                  </Tooltip>
-                </div>
-              </div>
-            }
-            key="1"
-          >
-            <div
-              css={`
-                height: 100px;
-                word-break: break-all;
-                overflow-y: auto;
-              `}
-            >
-              <p>{errorLogs || 'Unknown Error'}</p>
-            </div>
-          </Panel>
           <Panel
             header={
               <div

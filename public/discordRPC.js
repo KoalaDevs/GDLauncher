@@ -3,15 +3,20 @@ const log = require('electron-log');
 
 let client;
 let activity;
-
 const initialAppStartup = Math.floor(Date.now() / 1000);
 
 const defaultValue = {
   details: 'Idle',
   startTimestamp: initialAppStartup,
   largeImageKey: 'default_big',
-  largeImageText: 'GDLauncher - A Custom Minecraft Launcher',
-  instance: false
+  largeImageText: 'KoalaLauncher',
+  buttons: [
+    { label: 'Join Discord', url: 'https://invite.gg/KoalaDevs' },
+    {
+      label: 'Github',
+      url: 'https://github.com/KoalaDevs/KoalaLauncher'
+    }
+  ]
 };
 
 exports.initRPC = () => {
@@ -40,6 +45,7 @@ exports.update = details => {
     startTimestamp: Math.floor(Date.now() / 1000),
     details: `Playing ${details}`
   };
+  console.log(activity);
   client.setActivity(activity);
 };
 

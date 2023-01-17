@@ -87,7 +87,7 @@ module.exports = () => {
         //         './build/static/js/*'
         //       ],
         //       ignore: ['native'],
-        //       org: 'gdlauncher',
+        //       org: 'KoalaLauncher',
         //       project: 'react',
         //       authToken: process.env.SENTRY_AUTH,
         //       url: process.env.SOURCE_MAPS_UPLOAD,

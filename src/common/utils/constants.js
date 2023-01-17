@@ -1,15 +1,15 @@
 export const MC_MANIFEST_URL =
   'https://launchermeta.mojang.com/mc/game/version_manifest.json';
-export const MC_RESOURCES_URL = 'http://resources.download.minecraft.net';
+export const MC_RESOURCES_URL = 'https://resources.download.minecraft.net';
 export const FABRIC_APIS = 'https://meta.fabricmc.net/v2';
 export const GDL_LEGACYJAVAFIXER_MOD_URL =
   'https://gdevs.io/legacyjavafixer-1.0.jar';
 export const MOJANG_APIS = 'https://authserver.mojang.com';
-export const JAVA_MANIFEST_URL = 'https://cdn.gdlauncher.com/openjdk8.json';
+export const JAVA_MANIFEST_URL = 'https://cdn.KoalaLauncher.com/openjdk8.json';
 export const LATEST_JAVA_VERSION = 17;
 export const JAVA_LATEST_MANIFEST_URL =
-  'https://cdn.gdlauncher.com/openjdk17.json';
-export const MAVEN_REPO = 'http://central.maven.org/maven2';
+  'https://cdn.KoalaLauncher.com/openjdk17.json';
+export const MAVEN_REPO = 'https://central.maven.org/maven2';
 export const MC_LIBRARIES_URL = 'https://libraries.minecraft.net';
 export const FORGESVC_URL = 'https://api.curseforge.com/v1';
 export const FTB_API_URL = 'https://api.modpacks.ch/public';
