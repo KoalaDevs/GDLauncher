@@ -3,33 +3,19 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import ReactHtmlParser from 'react-html-parser';
-import ReactMarkdown from 'react-markdown';
 import path from 'path';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExternalLinkAlt, faInfo } from '@fortawesome/free-solid-svg-icons';
 import { Button, Select } from 'antd';
 import Modal from '../components/Modal';
 import { transparentize } from 'polished';
-import {
-  getAddonDescription,
-  getAddonFiles,
-  getAddon,
-  getModrinthProject,
-  getModrinthVersions,
-  getModrinthUser
-} from '../api';
+import { getAddonDescription, getAddonFiles, getAddon } from '../api';
 import CloseButton from '../components/CloseButton';
 import { closeModal, openModal } from '../reducers/modals/actions';
 import { installMod, updateInstanceConfig } from '../reducers/actions';
 import { remove } from 'fs-extra';
 import { _getInstancesPath, _getInstance } from '../utils/selectors';
-import {
-  FABRIC,
-  FORGE,
-  CURSEFORGE_URL,
-  CURSEFORGE,
-  MODRINTH
-} from '../utils/constants';
+import { FABRIC, FORGE, CURSEFORGE_URL } from '../utils/constants';
 import { formatNumber, formatDate } from '../utils';
 import {
   filterFabricFilesByVersion,
@@ -38,8 +24,7 @@ import {
 } from '../../app/desktop/utils';
 
 const ModOverview = ({
-  modSource,
-  projectID,
+  modpackId,
   fileID,
   gameVersions,
   instanceName,
@@ -47,16 +32,7 @@ const ModOverview = ({
 }) => {
   const dispatch = useDispatch();
   const [description, setDescription] = useState(null);
-  // curseforge only
   const [addon, setAddon] = useState(null);
-  // modrinth only
-  const [mod, setMod] = useState(null);
-  const [author, setAuthor] = useState('');
-  const [downloadCount, setDownloadCount] = useState(0);
-  const [updatedDate, setUpdatedDate] = useState(0);
-  const [gameVersion, setGameVersion] = useState('');
-  const [url, setUrl] = useState('');
-  // end
   const [files, setFiles] = useState([]);
   const [selectedItem, setSelectedItem] = useState(fileID);
   const [installedData, setInstalledData] = useState({ fileID, fileName });
@@ -68,60 +44,32 @@ const ModOverview = ({
   useEffect(() => {
     const init = async () => {
       setLoadingFiles(true);
-      if (modSource === CURSEFORGE) {
-        await Promise.all([
-          getAddon(projectID).then(addon => {
-            setAddon(addon);
-            setAuthor(addon.author || addon.authors?.at(0).name);
-            setDownloadCount(addon.downloadCount);
-            setUpdatedDate(Date.parse(addon.dateModified));
-            setGameVersion(addon.latestFilesIndexes[0].gameVersion);
-            setUrl(addon.links?.websiteUrl);
-          }),
-          getAddonDescription(projectID).then(data => {
-            // Replace the beginning of all relative URLs with the Curseforge URL
-            const modifiedData = data.replace(
-              /href="(?!http)/g,
-              `href="${CURSEFORGE_URL}`
-            );
-            setDescription(modifiedData);
-          }),
-          getAddonFiles(projectID).then(async data => {
-            const isFabric =
-              getPatchedInstanceType(instance) === FABRIC &&
-              projectID !== 361988;
-            const isForge =
-              getPatchedInstanceType(instance) === FORGE ||
-              projectID === 361988;
-            let filteredFiles = [];
-            if (isFabric) {
-              filteredFiles = filterFabricFilesByVersion(data, gameVersions);
-            } else if (isForge) {
-              filteredFiles = filterForgeFilesByVersion(data, gameVersions);
-            }
+      await Promise.all([
+        getAddon(modpackId).then(data => setAddon(data)),
+        getAddonDescription(modpackId).then(data => {
+          // Replace the beginning of all relative URLs with the Curseforge URL
+          const modifiedData = data.replace(
+            /href="(?!http)/g,
+            `href="${CURSEFORGE_URL}`
+          );
+          setDescription(modifiedData);
+        }),
+        getAddonFiles(modpackId).then(async data => {
+          const isFabric =
+            getPatchedInstanceType(instance) === FABRIC && modpackId !== 361988;
+          const isForge =
+            getPatchedInstanceType(instance) === FORGE || modpackId === 361988;
+          let filteredFiles = [];
+          if (isFabric) {
+            filteredFiles = filterFabricFilesByVersion(data, gameVersions);
+          } else if (isForge) {
+            filteredFiles = filterForgeFilesByVersion(data, gameVersions);
+          }
 
-            setFiles(filteredFiles);
-            setLoadingFiles(false);
-          })
-        ]);
-      } else if (modSource === MODRINTH) {
-        const project = await getModrinthProject(projectID);
-        setMod(project);
-
-        setDescription(project.body);
-        const versions = (await getModrinthVersions(project.versions)).sort(
-          (a, b) => Date.parse(b.date_published) - Date.parse(a.date_published)
-        );
-        setFiles(versions);
-        setLoadingFiles(false);
-        getModrinthUser(versions[0].author_id).then(user => {
-          setAuthor(user.username);
-        });
-        setDownloadCount(project.downloads);
-        setUpdatedDate(Date.parse(project.updated));
-        setGameVersion(versions[0].game_versions[0]);
-        setUrl(`https://modrinth.com/mod/${project.slug}`);
-      }
+          setFiles(filteredFiles);
+          setLoadingFiles(false);
+        })
+      ]);
     };
 
     init();
@@ -138,11 +86,8 @@ const ModOverview = ({
   };
 
   const getReleaseType = id => {
-    if (typeof id === 'string' || id instanceof String) id = id.toUpperCase();
-
     switch (id) {
       case 1:
-      case 'RELEASE':
         return (
           <span
             css={`
@@ -153,7 +98,6 @@ const ModOverview = ({
           </span>
         );
       case 2:
-      case 'BETA':
         return (
           <span
             css={`
@@ -164,7 +108,7 @@ const ModOverview = ({
           </span>
         );
       case 3:
-      case 'ALPHA':
+      default:
         return (
           <span
             css={`
@@ -174,21 +118,11 @@ const ModOverview = ({
             [Alpha]
           </span>
         );
-      default:
-        return (
-          <span
-            css={`
-              color: ${props => props.theme.palette.colors.red};
-            `}
-          >
-            [Unknown]
-          </span>
-        );
     }
   };
 
   const handleChange = value => setSelectedItem(JSON.parse(value));
-  const primaryImage = addon?.logo || mod?.icon_url;
+  const primaryImage = addon?.logo;
   return (
     <Modal
       css={`
@@ -203,31 +137,32 @@ const ModOverview = ({
           <CloseButton onClick={() => dispatch(closeModal())} />
         </StyledCloseButton>
         <Container>
-          <Parallax bg={primaryImage}>
+          <Parallax bg={primaryImage?.url}>
             <ParallaxContent>
               <ParallaxInnerContent>
-                {addon?.name || mod?.name}
+                {addon?.name}
                 <ParallaxContentInfos>
                   <div>
                     <label>Author: </label>
-                    {author}
+                    {addon?.authors[0].name}
                   </div>
-                  {downloadCount && (
+                  {addon?.downloadCount && (
                     <div>
                       <label>Downloads: </label>
-                      {formatNumber(downloadCount)}
+                      {formatNumber(addon?.downloadCount)}
                     </div>
                   )}
                   <div>
-                    <label>Last Update: </label> {formatDate(updatedDate)}
+                    <label>Last Updated: </label>{' '}
+                    {formatDate(addon?.dateModified)}
                   </div>
                   <div>
-                    <label>MC version: </label>
+                    <label>Minecraft Vesrion: </label>
                     {addon?.latestFilesIndexes[0]?.gameVersion}
                   </div>
                 </ParallaxContentInfos>
                 <Button
-                  href={url}
+                  href={addon?.links?.websiteUrl}
                   css={`
                     position: absolute;
                     top: 20px;
@@ -246,10 +181,8 @@ const ModOverview = ({
                   onClick={() => {
                     dispatch(
                       openModal('ModChangelog', {
-                        projectID,
-                        projectName: addon?.name || mod?.name,
-                        files,
-                        type: modSource
+                        modpackId: modpackId,
+                        files
                       })
                     );
                   }}
@@ -260,7 +193,6 @@ const ModOverview = ({
                     width: 30px;
                     height: 30px;
                     display: flex;
-                    align-items: center;
                     justify-content: center;
                   `}
                   type="primary"
@@ -270,13 +202,7 @@ const ModOverview = ({
               </ParallaxInnerContent>
             </ParallaxContent>
           </Parallax>
-          <Content>
-            {modSource === CURSEFORGE ? (
-              ReactHtmlParser(description)
-            ) : (
-              <ReactMarkdown>{description}</ReactMarkdown>
-            )}
-          </Content>
+          <Content>{ReactHtmlParser(description)}</Content>
         </Container>
         <Footer>
           {installedData.fileID &&
@@ -309,7 +235,7 @@ const ModOverview = ({
           >
             {(files || []).map(file => (
               <Select.Option
-                title={file.displayName || file.name}
+                title={file.displayName}
                 key={file.id}
                 value={file.id}
               >
@@ -326,7 +252,7 @@ const ModOverview = ({
                       align-items: center;
                     `}
                   >
-                    {file.displayName || file.name}
+                    {file.displayName}
                   </div>
                   <div
                     css={`
@@ -336,14 +262,8 @@ const ModOverview = ({
                       flex-direction: column;
                     `}
                   >
-                    <div>
-                      {modSource === CURSEFORGE
-                        ? gameVersions
-                        : file.game_versions[0]}
-                    </div>
-                    <div>
-                      {getReleaseType(file.releaseType || file.version_type)}
-                    </div>
+                    <div>{gameVersions}</div>
+                    <div>{getReleaseType(file.releaseType)}</div>
                   </div>
                   <div
                     css={`
@@ -353,9 +273,7 @@ const ModOverview = ({
                     `}
                   >
                     <div>
-                      {new Date(
-                        file.fileDate || file.date_published
-                      ).toLocaleDateString(undefined, {
+                      {new Date(file.fileDate).toLocaleDateString(undefined, {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'
@@ -394,7 +312,7 @@ const ModOverview = ({
               }
               const newFile = await dispatch(
                 installMod(
-                  projectID,
+                  modpackId,
                   selectedItem,
                   instanceName,
                   gameVersions,

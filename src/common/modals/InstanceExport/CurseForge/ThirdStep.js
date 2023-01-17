@@ -108,15 +108,15 @@ export default function ThirdStep({
       manifestVersion: 1,
       version: packVersion,
       author: packAuthor,
-      projectID:
+      modpackId:
         modloaderName === 'forge' && loader.length > 3
           ? parseInt(loader?.fileID, 10)
           : undefined,
       name: packZipName,
       files: modsArray
-        .filter(mod => mod?.projectID)
+        .filter(mod => mod?.modpackId)
         .map(mod => ({
-          projectID: mod.projectID,
+          modpackId: mod.modpackId,
           fileID: mod.fileID,
           required: true
         }))
@@ -126,7 +126,7 @@ export default function ThirdStep({
   const createModListHtml = async () => {
     const mappedMods = await Promise.all(
       mods
-        .filter(mod => mod.projectID)
+        .filter(mod => mod.modpackId)
         .map(async mod => {
           let ok = false;
           let tries = 0;
@@ -137,7 +137,7 @@ export default function ThirdStep({
               if (tries !== 1) {
                 await new Promise(resolve => setTimeout(resolve, 5000));
               }
-              const data = await getAddon(mod.projectID);
+              const data = await getAddon(mod.modpackId);
 
               ok = true;
               return {
@@ -168,7 +168,7 @@ export default function ThirdStep({
             const match = mods.find(
               mod => mod.fileName === path.basename(file)
             );
-            if (match && match.projectID) return false;
+            if (match && match.modpackId) return false;
             return true;
           })
         : selectedFiles;
@@ -179,7 +179,7 @@ export default function ThirdStep({
             const match = selectedFiles.find(
               file => mod.fileName === path.basename(file)
             );
-            if (match && mod.projectID) return true;
+            if (match && mod.modpackId) return true;
             return false;
           })
         : selectedFiles;

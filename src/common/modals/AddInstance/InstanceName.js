@@ -140,7 +140,7 @@ const InstanceName = ({
         );
       } else {
         manifest = await downloadAddonZip(
-          version?.projectID,
+          version?.modpackId,
           version?.fileID,
           path.join(instancesPath, localInstanceName),
           path.join(tempPath, localInstanceName)
@@ -190,7 +190,7 @@ const InstanceName = ({
             forgeManifest
           ),
           fileID: version?.fileID,
-          projectID: version?.projectID,
+          modpackId: version?.modpackId,
           source: version?.source,
           sourceName: manifest.name
         };
@@ -209,7 +209,7 @@ const InstanceName = ({
           mcVersion: manifest.minecraft.version,
           loaderVersion: extractFabricVersionFromManifest(manifest),
           fileID: version?.fileID,
-          projectID: version?.projectID,
+          modpackId: version?.modpackId,
           source: version?.source,
           sourceName: manifest.name
         };
@@ -242,7 +242,7 @@ const InstanceName = ({
       // Fetch mc version
 
       const data = await getFTBModpackVersionData(
-        version?.projectID,
+        version?.modpackId,
         version?.fileID
       );
 
@@ -260,7 +260,7 @@ const InstanceName = ({
                 forgeManifest
               ),
         fileID: version?.fileID,
-        projectID: version?.projectID,
+        modpackId: version?.modpackId,
         source: FTB,
         sourceName: originalMcName
       };
@@ -345,7 +345,7 @@ const InstanceName = ({
         mcVersion,
         loaderVersion,
         fileID: version?.fileID,
-        projectID: version?.projectID,
+        modpackId: version?.modpackId,
         source: MODRINTH,
         sourceName: originalMcName
       };

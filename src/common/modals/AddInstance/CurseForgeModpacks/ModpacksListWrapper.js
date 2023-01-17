@@ -86,7 +86,7 @@ const ModpacksListWrapper = ({
           <div
             onClick={() => {
               setVersion({
-                projectID: modpack.id,
+                modpackId: modpack.id,
                 fileID: modpack.latestFiles[modpack.latestFiles.length - 1].id,
                 source: CURSEFORGE
               });

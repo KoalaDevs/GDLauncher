@@ -269,9 +269,9 @@ export const getFabricJson = ({ mcVersion, loaderVersion }) => {
 
 // FORGE ADDONS
 
-export const getAddon = async projectID => {
+export const getAddon = async modpackId => {
   trackCurseForgeAPI();
-  const url = `${FORGESVC_URL}/mods/${projectID}`;
+  const url = `${FORGESVC_URL}/mods/${modpackId}`;
   const { data } = await axioInstance.get(url);
   return data?.data;
 };
@@ -288,14 +288,14 @@ export const getMultipleAddons = async addons => {
   return data?.data;
 };
 
-export const getAddonFiles = async projectID => {
+export const getAddonFiles = async modpackId => {
   trackCurseForgeAPI();
   // Aggregate results in case of multiple pages
   const results = [];
   let hasMore = true;
 
   while (hasMore) {
-    const url = `${FORGESVC_URL}/mods/${projectID}/files?pageSize=400&index=${results.length}`;
+    const url = `${FORGESVC_URL}/mods/${modpackId}/files?pageSize=400&index=${results.length}`;
     const { data } = await axioInstance.get(url);
     results.push(...(data.data || []));
 
@@ -305,16 +305,16 @@ export const getAddonFiles = async projectID => {
   return results.sort(sortByDate);
 };
 
-export const getAddonDescription = async projectID => {
+export const getAddonDescription = async modpackId => {
   trackCurseForgeAPI();
-  const url = `${FORGESVC_URL}/mods/${projectID}/description`;
+  const url = `${FORGESVC_URL}/mods/${modpackId}/description`;
   const { data } = await axioInstance.get(url);
   return data?.data;
 };
 
-export const getAddonFile = async (projectID, fileID) => {
+export const getAddonFile = async (modpackId, fileID) => {
   trackCurseForgeAPI();
-  const url = `${FORGESVC_URL}/mods/${projectID}/files/${fileID}`;
+  const url = `${FORGESVC_URL}/mods/${modpackId}/files/${fileID}`;
   const { data } = await axioInstance.get(url);
   return data?.data;
 };
@@ -327,9 +327,9 @@ export const getAddonsByFingerprint = async fingerprints => {
   return data?.data;
 };
 
-export const getAddonFileChangelog = async (projectID, fileID) => {
+export const getAddonFileChangelog = async (modpackId, fileID) => {
   trackCurseForgeAPI();
-  const url = `${FORGESVC_URL}/mods/${projectID}/files/${fileID}/changelog`;
+  const url = `${FORGESVC_URL}/mods/${modpackId}/files/${fileID}/changelog`;
   const { data } = await axioInstance.get(url);
 
   return data?.data;
@@ -508,21 +508,21 @@ export const getModrinthSearchResults = async (
 };
 
 /**
- * @param {string} projectId
+ * @param {string} modpackId
  * @returns {Promise<ModrinthProject>}
  */
-export const getModrinthProject = async projectId => {
-  return (await getModrinthProjects([projectId])).at(0) ?? null;
+export const getModrinthProject = async modpackId => {
+  return (await getModrinthProjects([modpackId])).at(0) ?? null;
 };
 
 /**
- * @param {string[]} projectIds
+ * @param {string[]} modpackIds
  * @returns {Promise<ModrinthProject[]>}
  */
-export const getModrinthProjects = async projectIds => {
+export const getModrinthProjects = async modpackIds => {
   trackModrinthAPI();
   try {
-    const url = `/projects?ids=${JSON.stringify(projectIds)}`;
+    const url = `/projects?ids=${JSON.stringify(modpackIds)}`;
     const { data } = await modrinthClient.get(url);
     return data.map(fixModrinthProjectObject);
   } catch {
@@ -531,13 +531,13 @@ export const getModrinthProjects = async projectIds => {
 };
 
 /**
- * @param {string} projectId
+ * @param {string} modpackId
  * @returns {Promise<ModrinthVersion[]>}
  */
-export const getModrinthProjectVersions = async projectId => {
+export const getModrinthProjectVersions = async modpackId => {
   trackModrinthAPI();
   try {
-    const url = `/project/${projectId}/version`;
+    const url = `/project/${modpackId}/version`;
     const { data } = await modrinthClient.get(url);
     return data;
   } catch {
@@ -668,13 +668,13 @@ export const getModrinthCategories = async () => {
 };
 
 /**
- * @param {string} projectId
+ * @param {string} modpackId
  * @returns {Promise<ModrinthTeamMember[]>}
  */
-export const getModrinthProjectMembers = async projectId => {
+export const getModrinthProjectMembers = async modpackId => {
   trackModrinthAPI();
   try {
-    const url = `/project/${projectId}/members`;
+    const url = `/project/${modpackId}/members`;
     const { data } = await modrinthClient.get(url);
     return data;
   } catch (err) {

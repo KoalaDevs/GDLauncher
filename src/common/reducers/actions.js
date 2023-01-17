@@ -1736,7 +1736,7 @@ export function processFTBManifest(instanceName) {
 
     modManifests = modManifests.concat(
       ...optedOutMods.map(v =>
-        normalizeModData(v.modManifest, v.modManifest.projectID, v.addon.name)
+        normalizeModData(v.modManifest, v.modManifest.modpackId, v.addon.name)
       )
     );
 
@@ -1879,7 +1879,7 @@ export function processForgeManifest(instanceName) {
 
     const _getAddons = async () => {
       const addons = await getMultipleAddons(
-        manifest.files.map(v => v.projectID)
+        manifest.files.map(v => v.modpackId)
       );
 
       addons.forEach(v => {
@@ -1891,9 +1891,9 @@ export function processForgeManifest(instanceName) {
       await pMap(
         manifest.files,
         async item => {
-          const modManifest = await getAddonFile(item.projectID, item.fileID);
+          const modManifest = await getAddonFile(item.modpackId, item.fileID);
 
-          addonsFilesHashmap[item.projectID] = modManifest;
+          addonsFilesHashmap[item.modpackId] = modManifest;
         },
         { concurrency: concurrency + 10 }
       );
@@ -1906,7 +1906,7 @@ export function processForgeManifest(instanceName) {
     await pMap(
       manifest.files,
       async item => {
-        if (!addonsHashmap[item.projectID]) return;
+        if (!addonsHashmap[item.modpackId]) return;
         let ok = false;
         let tries = 0;
         /* eslint-disable no-await-in-loop */
@@ -1916,9 +1916,9 @@ export function processForgeManifest(instanceName) {
             await new Promise(resolve => setTimeout(resolve, 5000));
           }
 
-          const addon = addonsHashmap[item.projectID];
+          const addon = addonsHashmap[item.modpackId];
           const isResourcePack = addon.classId === 12;
-          const modManifest = addonsFilesHashmap[item.projectID];
+          const modManifest = addonsFilesHashmap[item.modpackId];
           const destFile = path.join(
             _getInstancesPath(state),
             instanceName,
@@ -1932,7 +1932,7 @@ export function processForgeManifest(instanceName) {
             if (!modManifest.downloadUrl) {
               const normalizedModData = normalizeModData(
                 modManifest,
-                item.projectID,
+                item.modpackId,
                 addon.name
               );
 
@@ -1941,7 +1941,7 @@ export function processForgeManifest(instanceName) {
             }
             await downloadFile(destFile, modManifest.downloadUrl);
             modManifests = modManifests.concat(
-              normalizeModData(modManifest, item.projectID, addon.name)
+              normalizeModData(modManifest, item.modpackId, addon.name)
             );
           }
           const percentage =
@@ -1976,7 +1976,7 @@ export function processForgeManifest(instanceName) {
 
     modManifests = modManifests.concat(
       ...optedOutMods.map(v =>
-        normalizeModData(v.modManifest, v.modManifest.projectID, v.addon.name)
+        normalizeModData(v.modManifest, v.modManifest.modpackId, v.addon.name)
       )
     );
 
@@ -1992,8 +1992,8 @@ export function processForgeManifest(instanceName) {
       validAddon = true;
     } catch {
       // If project and file id are provided, we download it on the spot
-      if (loader.projectID && loader.fileID) {
-        const data = await getAddonFile(loader.projectID, loader.fileID);
+      if (loader.modpackId && loader.fileID) {
+        const data = await getAddonFile(loader.modpackId, loader.fileID);
         try {
           await downloadFile(addonPathZip, data.downloadUrl);
           validAddon = true;
@@ -2145,7 +2145,7 @@ export function processModrinthManifest(instanceName) {
         modManifests = [
           ...modManifests,
           {
-            projectID: version?.project_id ?? null,
+            modpackId: version?.project_id ?? null,
             fileID: version?.id ?? null,
             fileName,
             displayName: fileName,
@@ -2478,7 +2478,7 @@ export const changeModpackVersion = (instanceName, newModpackData) => {
 
     switch (instance.loader.source) {
       case CURSEFORGE: {
-        const addon = await getAddon(instance.loader?.projectID);
+        const addon = await getAddon(instance.loader?.modpackId);
 
         const manifest = await fse.readJson(
           path.join(instancePath, 'manifest.json')
@@ -2498,7 +2498,7 @@ export const changeModpackVersion = (instanceName, newModpackData) => {
           })
         );
 
-        const modsprojectIds = (manifest?.files || []).map(v => v?.projectID);
+        const modsmodpackIds = (manifest?.files || []).map(v => v?.modpackId);
 
         dispatch(
           updateInstanceConfig(instanceName, prev =>
@@ -2506,7 +2506,7 @@ export const changeModpackVersion = (instanceName, newModpackData) => {
               {
                 ...prev,
                 mods: prev.mods.filter(
-                  v => !modsprojectIds.includes(v?.projectID)
+                  v => !modsmodpackIds.includes(v?.modpackId)
                 )
               },
               ['overrides']
@@ -2515,9 +2515,9 @@ export const changeModpackVersion = (instanceName, newModpackData) => {
         );
 
         await Promise.all(
-          modsprojectIds.map(async projectID => {
+          modsmodpackIds.map(async modpackId => {
             const modFound = instance.mods?.find(
-              v => v?.projectID === projectID
+              v => v?.modpackId === modpackId
             );
             if (modFound?.fileName) {
               try {
@@ -2537,7 +2537,7 @@ export const changeModpackVersion = (instanceName, newModpackData) => {
         const imageURL = addon?.logo?.thumbnailUrl;
 
         const newManifest = await downloadAddonZip(
-          instance.loader?.projectID,
+          instance.loader?.modpackId,
           newModpackData.id,
           path.join(_getInstancesPath(state), instanceName),
           path.join(tempPath, instanceName)
@@ -2568,7 +2568,7 @@ export const changeModpackVersion = (instanceName, newModpackData) => {
           mcVersion: newManifest.minecraft.version,
           loaderVersion,
           fileID: instance.loader?.fileID,
-          projectID: instance.loader?.projectID,
+          modpackId: instance.loader?.modpackId,
           source: instance.loader?.source
         };
 
@@ -2598,7 +2598,7 @@ export const changeModpackVersion = (instanceName, newModpackData) => {
         );
 
         const newModpack = await getFTBModpackVersionData(
-          instance.loader?.projectID,
+          instance.loader?.modpackId,
           newModpackData.id
         );
 
@@ -2612,7 +2612,7 @@ export const changeModpackVersion = (instanceName, newModpackData) => {
             state.app.forgeManifest
           ),
           fileID: newModpack?.id,
-          projectID: instance.loader?.projectID,
+          modpackId: instance.loader?.modpackId,
           source: instance.loader?.source
         };
 
@@ -2658,7 +2658,7 @@ export const changeModpackVersion = (instanceName, newModpackData) => {
           mcVersion: newModpackData?.gameVersions.at(0),
           loaderVersion: manifest.dependencies[loaderDependencyName],
           fileID: newModpackData?.id,
-          projectID: instance.loader?.projectID,
+          modpackId: instance.loader?.modpackId,
           source: instance.loader?.source
         };
 
@@ -3643,7 +3643,7 @@ export function launchInstance(instanceName, forceQuit = false) {
 }
 
 export function installMod(
-  projectID,
+  modpackId,
   fileID,
   instanceName,
   gameVersions,
@@ -3657,9 +3657,9 @@ export function installMod(
     const instancesPath = _getInstancesPath(state);
     const instancePath = path.join(instancesPath, instanceName);
     const instance = _getInstance(state)(instanceName);
-    const mainModData = await getAddonFile(projectID, fileID);
-    const addon = await getAddon(projectID);
-    mainModData.projectID = projectID;
+    const mainModData = await getAddonFile(modpackId, fileID);
+    const addon = await getAddon(modpackId);
+    mainModData.modpackId = modpackId;
     const destFile = path.join(instancePath, 'mods', mainModData.fileName);
     const tempFile = path.join(_getTempPath(state), mainModData.fileName);
     const installedMods = [];
@@ -3705,20 +3705,20 @@ export function installMod(
       await dispatch(
         updateInstanceConfig(instanceName, prev => {
           needToAddMod = !prev.mods.find(
-            v => v.fileID === fileID && v.projectID === projectID
+            v => v.fileID === fileID && v.modpackId === modpackId
           );
           return {
             ...prev,
             mods: [
               ...prev.mods,
               ...(needToAddMod
-                ? [normalizeModData(mainModData, projectID, addon.name)]
+                ? [normalizeModData(mainModData, modpackId, addon.name)]
                 : [])
             ]
           };
         })
       );
-      installedMods.push({ addon, projectID, needToAddMod });
+      installedMods.push({ addon, modpackId, needToAddMod });
 
       if (!needToAddMod) {
         if (useTempMiddleware) {
@@ -3859,7 +3859,7 @@ export function installModrinthMod(version, instanceName, onProgress) {
                 ...[
                   {
                     source: MODRINTH,
-                    projectID: v.project_id,
+                    modpackId: v.project_id,
                     fileID: v.id,
                     fileName: primaryFile.filename,
                     displayName: primaryFile.filename,
@@ -3930,7 +3930,7 @@ export const updateMod = (
     const item = { ...mod, slug: addon.slug };
     await dispatch(
       installMod(
-        mod.projectID,
+        mod.modpackId,
         fileID,
         instanceName,
         gameVersions,
@@ -3951,8 +3951,8 @@ export const initLatestMods = instanceName => {
     const { latestModManifests } = state;
 
     const modIds = instance?.mods
-      ?.filter(v => v.projectID)
-      ?.map(v => v.projectID);
+      ?.filter(v => v.modpackId)
+      ?.map(v => v.modpackId);
 
     // Check which mods need to be initialized
     const modsToInit = modIds?.filter(v => {
@@ -3971,7 +3971,7 @@ export const initLatestMods = instanceName => {
         } catch {
           // nothing
         }
-        return { projectID: mod, data };
+        return { modpackId: mod, data };
       },
       { concurrency: 40 }
     );
@@ -3981,11 +3981,11 @@ export const initLatestMods = instanceName => {
       .map(v => {
         // Find latest version for each mod
         const [latestMod] =
-          getPatchedInstanceType(instance) === FORGE || v.projectID === 361988
+          getPatchedInstanceType(instance) === FORGE || v.modpackId === 361988
             ? filterForgeFilesByVersion(v.data, instance.loader?.mcVersion)
             : filterFabricFilesByVersion(v.data, instance.loader?.mcVersion);
         if (latestMod) {
-          manifestsObj[v.projectID] = latestMod;
+          manifestsObj[v.modpackId] = latestMod;
         }
         return null;
       });

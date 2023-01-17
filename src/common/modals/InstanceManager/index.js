@@ -421,7 +421,7 @@ const InstanceManager = ({ instanceName }) => {
         <Content>
           <ContentComponent
             instanceName={instanceName}
-            modpackId={instance?.loader?.projectID}
+            modpackId={instance?.loader?.modpackId}
             fileID={instance?.loader?.fileID}
             background={background}
             source={instance?.loader?.source}
