@@ -1,7 +1,7 @@
 {
-  "name": "gdlauncher",
-  "version": "1.1.30",
-  "description": "GDLauncher is simple, yet powerful Minecraft custom launcher with a strong focus on the user experience",
+  "name": "KoalaLauncher",
+  "version": "1.1.29",
+  "description": "KoalaLauncher is simple, yet powerful Minecraft custom launcher with a strong focus on the user experience",
   "keywords": [
     "minecraft",
     "launcher",
@@ -14,11 +14,11 @@
     "webpack"
   ],
   "bugs": {
-    "url": "https://github.com/gorilla-devs/GDLauncher/issues"
+    "url": "https://github.com/KoalaDevs/KoalaLauncher/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gorilla-devs/GDLauncher.git"
+    "url": "git+https://github.com/KoalaDevs/KoalaLauncher.git"
   },
   "license": "GPL-3.0",
   "author": {

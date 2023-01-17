@@ -50,7 +50,7 @@ window.addEventListener('mouseup', e => {
 //     if (!dsn) {
 //       console.warn('No error monitoring token provided.');
 //       console.warn(
-//         'This is not a GDLauncher official release but it might be a testing release.'
+//         'This is not a KoalaLauncher official release but it might be a testing release.'
 //       );
 //       return;
 //     }

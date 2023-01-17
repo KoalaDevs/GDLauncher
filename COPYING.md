@@ -1,5 +1,5 @@
 # Copying
-The source code of the GDLauncher repository is licensed under GNU General Public License Version 3, which is 
+The source code of the KoalaLauncher repository is licensed under GNU General Public License Version 3, which is 
 provided in the file "LICENSE". However, graphic assets are licensed under a different license.
 
 All graphic assets present in this repository are licensed as stated below in the "Assets License" section.

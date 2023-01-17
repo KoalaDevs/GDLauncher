@@ -1,4 +1,4 @@
-import { promises as fs } from 'fs';
+import fss, { promises as fs } from 'fs';
 import originalFs from 'original-fs';
 import fse from 'fs-extra';
 import { extractFull } from 'node-7z';
@@ -189,7 +189,7 @@ export const librariesMapper = (libraries, librariesPath) => {
                 url: tempArr[k].url
                   .replace(
                     'libraries.minecraft.net',
-                    'cdn.gdlauncher.com/maven'
+                    'cdn.KoalaLauncher.com/maven'
                   )
                   .replace(/2.0-beta9/g, '2.0-beta9-fixed'),
                 path: tempArr[k].path.replace(/2.0-beta9/g, '2.0-beta9-fixed'),
@@ -205,7 +205,7 @@ export const librariesMapper = (libraries, librariesPath) => {
 
               // Assuming we can use 2.15
               tempArr[k] = {
-                url: `https://cdn.gdlauncher.com/maven/${mavenToArray(
+                url: `https://cdn.KoalaLauncher.com/maven/${mavenToArray(
                   patchedName,
                   native
                 ).join(path.sep)}`,
@@ -488,6 +488,93 @@ export const copyAssetsToLegacy = async assets => {
   );
 };
 
+export const addGlobalSettings = async (instancePath, settings) => {
+  const filePath = `${instancePath}/options.txt`;
+
+  const {
+    fullscreen,
+    autoJump,
+    guiScale,
+    fov,
+    fps,
+    renderDistance,
+    soundCategoryMaster,
+    soundCategoryMusik,
+    soundCategoryJukebox,
+    soundCategoryWeather,
+    soundCategoryBlocks,
+    soundCategoryHostile,
+    soundCategoryNeutral,
+    soundCategoryPlayer,
+    soundCategoryAmbient,
+    soundCategoryVoice,
+    vsync,
+    muteAllSounds
+  } = settings;
+
+  let data =
+    `fullscreen:${fullscreen}\n` +
+    `autoJump:${autoJump}\n` +
+    `guiScale:${guiScale}\n` +
+    `fov:${fov}\n` +
+    `maxFps:${fps}\n` +
+    `renderDistance:${renderDistance}\n` +
+    `enableVsync:${vsync}`;
+
+  if (!muteAllSounds) {
+    data +=
+      `soundCategory_master:${soundCategoryMaster}\n` +
+      `soundCategory_music:${soundCategoryMusik}\n` +
+      `soundCategory_record:${soundCategoryJukebox}\n` +
+      `soundCategory_weather:${soundCategoryWeather}\n` +
+      `soundCategory_blocks:${soundCategoryBlocks}\n` +
+      `soundCategory_hostile:${soundCategoryHostile}\n` +
+      `soundCategory_neutral:${soundCategoryNeutral}\n` +
+      `soundCategory_player:${soundCategoryPlayer}\n` +
+      `soundCategory_ambient:${soundCategoryAmbient}\n` +
+      `soundCategory_voice:${soundCategoryVoice}\n`;
+  } else {
+    data +=
+      `soundCategory_master:0\n` +
+      `soundCategory_music:0\n` +
+      `soundCategory_record:0\n` +
+      `soundCategory_weather:0\n` +
+      `soundCategory_blocks:0\n` +
+      `soundCategory_hostile:0\n` +
+      `soundCategory_neutral:0\n` +
+      `soundCategory_player:0\n` +
+      `soundCategory_ambient:0\n` +
+      `soundCategory_voice:0\n`;
+  }
+
+  try {
+    if (!fss.existsSync(filePath)) {
+      fss.writeFile(filePath, data, err => {
+        // In case of a error throw err.
+        if (err) throw err;
+      });
+    }
+    /* TODO
+    else{
+      fs.readFile(filePath, 'utf8' , (err, datas) => {
+        if (err) {
+          console.error(err)
+          return
+        }
+        var splitted = data.split("\n");
+        for(var i=0; i < splitted.length; i++) {
+          var regex = new RegExp("(?<=" + splitted[i].split(":")[0] + ":)(.*)(?=\n)", "g");
+          var result = datas.replace(regex, splitted[i].split(":")[1]);
+          
+          console.log(result);
+        }
+      })
+    } */
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 const hiddenToken = '__HIDDEN_TOKEN__';
 export const getJVMArguments112 = (
   libraries,
@@ -699,7 +786,7 @@ export const getJVMArguments113 = (
             );
             break;
           case 'launcher_name':
-            val = args[i].replace(argDiscovery, 'GDLauncher');
+            val = args[i].replace(argDiscovery, 'KoalaLauncher');
             break;
           case 'launcher_version':
             val = args[i].replace(argDiscovery, '1.0');

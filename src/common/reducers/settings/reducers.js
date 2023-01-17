@@ -140,6 +140,159 @@ function java(
   }
 }
 
+function fullscreen(state = true, action) {
+  switch (action.type) {
+    case ActionTypes.UPDATE_FULLSCREEN:
+      return action.val;
+    default:
+      return state;
+  }
+}
+
+function fov(state = 0.0, value) {
+  switch (value.type) {
+    case ActionTypes.UPDATE_FOV:
+      return value.val;
+    default:
+      return state;
+  }
+}
+
+function fps(state = 60, value) {
+  switch (value.type) {
+    case ActionTypes.UPDATE_FPS:
+      return value.val;
+    default:
+      return state;
+  }
+}
+
+function renderDistance(state = 8, value) {
+  switch (value.type) {
+    case ActionTypes.UPDATE_RENDER_DISTANCE:
+      return value.val;
+    default:
+      return state;
+  }
+}
+
+function guiScale(state = 0, value) {
+  switch (value.type) {
+    case ActionTypes.UPDATE_GUI_SCALE:
+      return value.val;
+    default:
+      return state;
+  }
+}
+
+function autoJump(state = false, action) {
+  switch (action.type) {
+    case ActionTypes.UPDATE_AUTO_JUMP:
+      return action.val;
+    default:
+      return state;
+  }
+}
+
+function soundCategoryMaster(state = 1.0, value) {
+  switch (value.type) {
+    case ActionTypes.UPDATE_SOUNDCATEGORY_MASTER:
+      return value.val;
+    default:
+      return state;
+  }
+}
+
+function soundCategoryMusik(state = 1.0, value) {
+  switch (value.type) {
+    case ActionTypes.UPDATE_SOUNDCATEGORY_MUSIC:
+      return value.val;
+    default:
+      return state;
+  }
+}
+
+function soundCategoryJukebox(state = 1.0, value) {
+  switch (value.type) {
+    case ActionTypes.UPDATE_SOUNDCATEGORY_JUKEBOX:
+      return value.val;
+    default:
+      return state;
+  }
+}
+
+function soundCategoryWeather(state = 1.0, value) {
+  switch (value.type) {
+    case ActionTypes.UPDATE_SOUNDCATEGORY_WEATHER:
+      return value.val;
+    default:
+      return state;
+  }
+}
+
+function soundCategoryBlocks(state = 1.0, value) {
+  switch (value.type) {
+    case ActionTypes.UPDATE_SOUNDCATEGORY_BLOCKS:
+      return value.val;
+    default:
+      return state;
+  }
+}
+
+function soundCategoryHostile(state = 1.0, value) {
+  switch (value.type) {
+    case ActionTypes.UPDATE_SOUNDCATEGORY_HOSTILE:
+      return value.val;
+    default:
+      return state;
+  }
+}
+
+function soundCategoryNeutral(state = 1.0, value) {
+  switch (value.type) {
+    case ActionTypes.UPDATE_SOUNDCATEGORY_NEUTRAL:
+      return value.val;
+    default:
+      return state;
+  }
+}
+
+function soundCategoryPlayer(state = 1.0, value) {
+  switch (value.type) {
+    case ActionTypes.UPDATE_SOUNDCATEGORY_PLAYER:
+      return value.val;
+    default:
+      return state;
+  }
+}
+
+function soundCategoryAmbient(state = 1.0, value) {
+  switch (value.type) {
+    case ActionTypes.UPDATE_SOUNDCATEGORY_AMBIENT:
+      return value.val;
+    default:
+      return state;
+  }
+}
+
+function soundCategoryVoice(state = 1.0, value) {
+  switch (value.type) {
+    case ActionTypes.UPDATE_SOUNDCATEGORY_VOICE:
+      return value.val;
+    default:
+      return state;
+  }
+}
+
+function vsync(state = false, action) {
+  switch (action.type) {
+    case ActionTypes.UPDATE_VSYNC:
+      return action.val;
+    default:
+      return state;
+  }
+}
+
 export default combineReducers({
   sounds,
   releaseChannel,
@@ -152,5 +305,22 @@ export default combineReducers({
   curseReleaseChannel,
   java,
   minecraftSettings,
-  mcStartupMethod
+  mcStartupMethod,
+  fullscreen,
+  fov,
+  fps,
+  renderDistance,
+  guiScale,
+  autoJump,
+  soundCategoryMaster,
+  soundCategoryMusik,
+  soundCategoryJukebox,
+  soundCategoryWeather,
+  soundCategoryBlocks,
+  soundCategoryHostile,
+  soundCategoryNeutral,
+  soundCategoryPlayer,
+  soundCategoryAmbient,
+  soundCategoryVoice,
+  vsync
 });
