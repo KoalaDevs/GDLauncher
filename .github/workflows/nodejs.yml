@@ -70,9 +70,8 @@ jobs:
           SOURCE_MAPS_UPLOAD: "${{ github.ref == 'refs/heads/releases' && secrets.SENTRY_UPLOAD_SOURCE_MAPS_URL || '' }}"
           SENTRY_AUTH: "${{ github.ref == 'refs/heads/releases' && secrets.SENTRY_AUTH || '' }}"
           REACT_CF_API_KEY: "${{ secrets.CF_API_KEY }}"
-          NODE_OPTIONS: "--openssl-legacy-provider"
         run: |
-          npm run release
+          SET NODE_OPTIONS=--openssl-legacy-provider && npm run release
       - name: npm run release for mac and linux
         if: matrix.os != 'windows-latest' || github.event_name != 'push'
         env:
@@ -87,9 +86,8 @@ jobs:
           SOURCE_MAPS_UPLOAD: "${{ github.ref == 'refs/heads/releases' && secrets.SENTRY_UPLOAD_SOURCE_MAPS_URL || '' }}"
           SENTRY_AUTH: "${{ github.ref == 'refs/heads/releases' && secrets.SENTRY_AUTH || '' }}"
           REACT_CF_API_KEY: "${{ secrets.CF_API_KEY }}"
-          NODE_OPTIONS: "--openssl-legacy-provider"
         run: |
-          npm run release
+          export NODE_OPTIONS=--openssl-legacy-provider && npm run release
       - name: upload release to gh releases
         if: github.event_name == 'push' && github.ref == 'refs/heads/releases'
         env:
