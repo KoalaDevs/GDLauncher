@@ -1,9 +1,15 @@
-import React, { memo, useState } from 'react';
+import React, { useEffect, memo, useState } from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { clipboard } from 'electron';
 import { Tooltip, Collapse } from 'antd';
+import makeDir from 'make-dir';
+import { promises as fs, watch } from 'fs';
+import path from 'path';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCopy } from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faShare } from '@fortawesome/free-solid-svg-icons';
+import { pasteBinPost } from '../api';
+import { _getInstancesPath } from '../utils/selectors';
 
 import Modal from '../components/Modal';
 import Logo from '../../ui/LogoSad';
@@ -35,13 +41,72 @@ const calcError = code => {
 
 const { Panel } = Collapse;
 
-const InstanceCrashed = ({ code, errorLogs }) => {
+const InstanceCrashed = ({ instanceName, code }) => {
   const [copiedLog, setCopiedLog] = useState(null);
+  const [crashLog, setCrashLog] = useState(null);
+  const instancesPath = useSelector(_getInstancesPath);
+  const instancePath = path.join(instancesPath, instanceName);
+  const crashReportsPath = path.join(instancePath, 'crash-reports');
 
-  function copy(e) {
+  let watcher;
+
+  const scanCrashReports = async () => {
+    await makeDir(crashReportsPath);
+    try {
+      const files = await fs.readdir(crashReportsPath);
+      await Promise.all(
+        files.map(async element => {
+          const stats = await fs.stat(path.join(crashReportsPath, element));
+          const fileBirthdate = new Date(stats.birthtimeMs);
+          const timeDiff = Date.now() - fileBirthdate;
+          const seconds = parseInt(Math.floor(timeDiff / 1000), 10);
+          if (seconds <= 3) {
+            const crashReport = await fs.readFile(
+              path.join(crashReportsPath, element)
+            );
+            setCrashLog(crashReport.toString());
+          }
+        })
+      );
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const readCrashReport = async () => {
+    scanCrashReports();
+    if (watcher) {
+      await watcher.stop();
+      watcher = null;
+    }
+    watcher = await watch(crashReportsPath, async () => {
+      scanCrashReports();
+    });
+  };
+
+  useEffect(() => {
+    readCrashReport();
+    return () => watcher?.close();
+  }, []);
+
+  async function share(e, content) {
+    e.stopPropagation();
+
+    const res = await pasteBinPost(content);
+
+    if (res.status === 200) {
+      setCopiedLog(true);
+      clipboard.writeText(res.data);
+      setTimeout(() => {
+        setCopiedLog(false);
+      }, 500);
+    }
+  }
+
+  function copy(e, content) {
     e.stopPropagation();
     setCopiedLog(true);
-    clipboard.writeText(errorLogs);
+    clipboard.writeText(content);
     setTimeout(() => {
       setCopiedLog(false);
     }, 500);
@@ -50,18 +115,15 @@ const InstanceCrashed = ({ code, errorLogs }) => {
   return (
     <Modal
       css={`
-        height: 450px;
-        width: 500px;
+        height: 580px;
+        width: 630px;
       `}
       title="The instance could not be launched"
     >
       <Container>
         <InnerContainer>
           <Logo size={100} />
-          <h3>
-            OOPSIE WOOPSIE!!
-            <br /> A creeper blew this instance up!
-          </h3>
+          <h3>The instance could not be launched</h3>
         </InnerContainer>
         <Card
           css={`
@@ -78,6 +140,7 @@ const InstanceCrashed = ({ code, errorLogs }) => {
             width: 100%;
           `}
           defaultActiveKey={['1']}
+          accordion
         >
           <Panel
             header={
@@ -88,30 +151,67 @@ const InstanceCrashed = ({ code, errorLogs }) => {
                   justify-content: space-between;
                   align-items: center;
                 `}
+                key="1"
               >
-                Error Log &nbsp;
-                <Tooltip title={copiedLog ? 'Copied' : 'Copy'} placement="top">
-                  <div
-                    css={`
-                      margin: 0;
-                    `}
+                Crash Log &nbsp;
+                <div
+                  css={`
+                    display: flex;
+                  `}
+                >
+                  <Tooltip
+                    title={copiedLog ? 'Copied Link' : 'Share'}
+                    placement="top"
                   >
-                    <FontAwesomeIcon icon={faCopy} onClick={e => copy(e)} />
-                  </div>
-                </Tooltip>
+                    <div
+                      css={`
+                        margin: 0;
+                      `}
+                    >
+                      <FontAwesomeIcon
+                        css={`
+                          margin: 0 20px;
+                        `}
+                        icon={faShare}
+                        onClick={e => share(e, crashLog)}
+                      />
+                    </div>
+                  </Tooltip>
+                  <Tooltip
+                    title={copiedLog ? 'Copied' : 'Copy'}
+                    placement="top"
+                  >
+                    <div
+                      css={`
+                        margin: 0;
+                      `}
+                    >
+                      <FontAwesomeIcon
+                        icon={faCopy}
+                        onClick={e => copy(e, crashLog)}
+                      />
+                    </div>
+                  </Tooltip>
+                </div>
               </div>
             }
-            key="1"
+            key="2"
           >
-            <p
+            <div
               css={`
-                height: 110px;
-                word-break: break-all;
-                overflow-y: auto;
+                max-height: 200px;
+                overflow: auto;
               `}
             >
-              {errorLogs}
-            </p>
+              <pre
+                css={`
+                  word-break: break-all;
+                  text-align: start;
+                `}
+              >
+                {crashLog || 'No crash log found'}
+              </pre>
+            </div>
           </Panel>
         </Collapse>
       </Container>

@@ -128,3 +128,165 @@ export function updateCurseReleaseChannel(curseReleaseChannel) {
     });
   };
 }
+
+export function updateFullscreen(val) {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.UPDATE_FULLSCREEN,
+      val
+    });
+  };
+}
+
+export function updateFOV(val) {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.UPDATE_FOV,
+      val
+    });
+  };
+}
+
+export function updateFPS(val) {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.UPDATE_FPS,
+      val
+    });
+  };
+}
+
+export function updateRenderDistance(val) {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.UPDATE_RENDER_DISTANCE,
+      val
+    });
+  };
+}
+
+export function updateGUIScale(val) {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.UPDATE_GUI_SCALE,
+      val
+    });
+  };
+}
+
+export function updateAutoJump(val) {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.UPDATE_AUTO_JUMP,
+      val
+    });
+  };
+}
+
+export function updateSoundCategoryMaster(val) {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.UPDATE_SOUNDCATEGORY_MASTER,
+      val
+    });
+  };
+}
+
+export function updateSoundCategoryMusik(val) {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.UPDATE_SOUNDCATEGORY_MUSIC,
+      val
+    });
+  };
+}
+
+export function updateSoundCategoryJukebox(val) {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.UPDATE_SOUNDCATEGORY_JUKEBOX,
+      val
+    });
+  };
+}
+
+export function updateSoundCategoryWeather(val) {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.UPDATE_SOUNDCATEGORY_WEATHER,
+      val
+    });
+  };
+}
+
+export function updateSoundCategoryBlocks(val) {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.UPDATE_SOUNDCATEGORY_BLOCKS,
+      val
+    });
+  };
+}
+
+export function updateSoundCategoryHostile(val) {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.UPDATE_SOUNDCATEGORY_HOSTILE,
+      val
+    });
+  };
+}
+
+export function updateSoundCategoryNeutral(val) {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.UPDATE_SOUNDCATEGORY_NEUTRAL,
+      val
+    });
+  };
+}
+
+export function updateSoundCategoryPlayer(val) {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.UPDATE_SOUNDCATEGORY_PLAYER,
+      val
+    });
+  };
+}
+
+export function updateSoundCategoryAmbient(val) {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.UPDATE_SOUNDCATEGORY_AMBIENT,
+      val
+    });
+  };
+}
+
+export function updateSoundCategoryVoice(val) {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.UPDATE_SOUNDCATEGORY_VOICE,
+      val
+    });
+  };
+}
+
+export function updateVSync(val) {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.UPDATE_VSYNC,
+      val
+    });
+  };
+}
+
+export function updateMuteAllSounds(val) {
+  return dispatch => {
+    dispatch({
+      type: ActionTypes.UPDATE_MUTE_ALL_SOUNDS,
+      val
+    });
+  };
+}

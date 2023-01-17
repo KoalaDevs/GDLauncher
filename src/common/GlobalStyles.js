@@ -14,7 +14,7 @@ export default createGlobalStyle`
   }
   
   #root {
-    font-family: Inter, Roboto, Helvetica, sans-serif;
+    font-family: Averia Sans Libre, Roboto, Helvetica, sans-serif;
     font-size: 14px;
     height: 100%;
     overflow: hidden;

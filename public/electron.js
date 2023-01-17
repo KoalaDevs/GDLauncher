@@ -78,10 +78,10 @@ const edit = [
   ...(process.platform === 'darwin'
     ? [
         {
-          label: 'GDLauncher',
+          label: 'KoalaLauncher',
           submenu: [
             {
-              label: 'About GDLauncher',
+              label: 'About KoalaLauncher',
               role: 'about'
             },
             { type: 'separator' },
@@ -92,7 +92,7 @@ const edit = [
             },
             { type: 'separator' },
             {
-              label: 'Hide GDLauncher',
+              label: 'Hide KoalaLauncher',
               accelerator: 'Command+H',
               role: 'hide'
             },
@@ -107,7 +107,7 @@ const edit = [
             },
             { type: 'separator' },
             {
-              label: 'Quit GDLauncher',
+              label: 'Quit KoalaLauncher',
               accelerator: 'Command+Q',
               click: () => {
                 app.quit();
@@ -283,7 +283,7 @@ function createWindow() {
     minHeight: 700,
     show: true,
     frame: false,
-    backgroundColor: '#1B2533',
+    backgroundColor: '#3d3d3d',
     webPreferences: {
       experimentalFeatures: true,
       nodeIntegration: true,
@@ -354,7 +354,7 @@ function createWindow() {
   tray = new Tray(nimage);
   const trayMenuTemplate = [
     {
-      label: 'GDLauncher',
+      label: 'KoalaLauncher',
       enabled: false
     },
     {
@@ -365,7 +365,7 @@ function createWindow() {
 
   const trayMenu = Menu.buildFromTemplate(trayMenuTemplate);
   tray.setContextMenu(trayMenu);
-  tray.setToolTip('GDLauncher');
+  tray.setToolTip('KoalaLauncher');
   tray.on('double-click', () => mainWindow.show());
 
   mainWindow.loadURL(
@@ -373,7 +373,7 @@ function createWindow() {
       ? 'http://localhost:3000'
       : `file://${path.join(__dirname, '../build/index.html')}`,
     {
-      userAgent: 'GDLauncher'
+      userAgent: 'KoalaLauncher'
     }
   );
   if (isDev) {
@@ -941,7 +941,7 @@ if (process.env.REACT_APP_RELEASE_TYPE === 'setup') {
     !allowUnstableReleases && app.getVersion().includes('beta');
   autoUpdater.allowPrerelease = allowUnstableReleases;
   autoUpdater.setFeedURL({
-    owner: 'gorilla-devs',
+    owner: 'KoalaDevs',
     repo: 'GDLauncher',
     provider: 'github'
   });

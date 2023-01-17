@@ -6,15 +6,19 @@ import { Transition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faArrowRight,
-  faExternalLinkAlt
+  faExclamationCircle,
+  faCheckCircle,
+  faExternalLinkAlt,
+  faSpinner
 } from '@fortawesome/free-solid-svg-icons';
 import { Input, Button } from 'antd';
 import { useKey } from 'rooks';
+import axios from 'axios';
 import { login, loginOAuth } from '../../../common/reducers/actions';
 import { load, requesting } from '../../../common/reducers/loading/actions';
 import features from '../../../common/reducers/loading/features';
 import backgroundVideo from '../../../common/assets/background.webm';
-import HorizontalLogo from '../../../ui/HorizontalLogo';
+import HorizontalLogo from '../../../ui/HorizontalLogo.png';
 import { openModal } from '../../../common/reducers/modals/actions';
 
 const LoginButton = styled(Button)`
@@ -24,7 +28,7 @@ const LoginButton = styled(Button)`
     props.active ? props.theme.palette.grey[600] : 'transparent'};
   border: 0;
   height: auto;
-  margin-top: 20px;
+  margin-top: 40px;
   text-align: center;
   color: ${props => props.theme.palette.text.primary};
   &:hover {
@@ -51,9 +55,9 @@ const Container = styled.div`
 const LeftSide = styled.div`
   position: relative;
   width: 300px;
-  padding: 40px;
+  padding: 20px;
   height: 100%;
-  transition: 0.3s ease-in-out;
+  transition: 1s ease-in-out;
   transform: translateX(
     ${({ transitionState }) =>
       transitionState === 'entering' || transitionState === 'entered'
@@ -62,7 +66,7 @@ const LeftSide = styled.div`
   );
   background: ${props => props.theme.palette.secondary.main};
   & div {
-    margin: 10px 0;
+    margin: 2px 0;
   }
   p {
     margin-top: 1em;
@@ -71,20 +75,17 @@ const LeftSide = styled.div`
 `;
 
 const Form = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
   align-items: center;
-  margin: 20px 0 !important;
 `;
 
 const Background = styled.div`
   width: 100%;
   display: flex;
+  text-align: center;
   justify-content: center;
   align-items: center;
   video {
-    transition: 0.3s ease-in-out;
+    transition: 1s ease-in-out;
     transform: translateX(
       ${({ transitionState }) =>
         transitionState === 'entering' || transitionState === 'entered'
@@ -105,12 +106,19 @@ const Header = styled.div`
 
 const Footer = styled.div`
   position: absolute;
-  bottom: 4px;
+  bottom: 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   width: calc(100% - 80px);
+`;
+
+const Status = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: ${props => props.theme.palette.text.third};
 `;
 
 const FooterLinks = styled.div`
@@ -142,12 +150,29 @@ const LoginFailMessage = styled.div`
   color: ${props => props.theme.palette.colors.red};
 `;
 
+const StatusIcon = ({ color }) => {
+  return (
+    <FontAwesomeIcon
+      icon={color === 'red' ? faExclamationCircle : faCheckCircle}
+      color={color}
+      css={`
+        margin: 0 5px;
+        color: ${props =>
+          props.color === 'green'
+            ? props.theme.palette.colors.green
+            : props.theme.palette.error.main};
+      `}
+    />
+  );
+};
+
 const Login = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [version, setVersion] = useState(null);
   const [loginFailed, setLoginFailed] = useState(false);
+  const [status, setStatus] = useState({});
   const loading = useSelector(
     state => state.loading.accountAuthentication.isRequesting
   );
@@ -179,10 +204,18 @@ const Login = () => {
     }, 1000);
   };
 
+  const fetchStatus = async () => {
+    const { data } = await axios.get('https://status.mojang.com/check');
+    const result = {};
+    Object.assign(result, ...data);
+    setStatus(result);
+  };
+
   useKey(['Enter'], authenticate);
 
   useEffect(() => {
     ipcRenderer.invoke('getAppVersion').then(setVersion).catch(console.error);
+    fetchStatus().catch(console.error);
   }, []);
 
   return (
@@ -191,8 +224,16 @@ const Login = () => {
         <Container>
           <LeftSide transitionState={transitionState}>
             <Header>
-              <HorizontalLogo size={200} />
+              <img
+                src={HorizontalLogo}
+                height="95px"
+                width="220px"
+                alt="Logo"
+                draggable="false"
+                pointerCursor
+              />{' '}
             </Header>
+            <p>Sign in with your Mojang Account</p>
             <Form>
               <div>
                 <Input
@@ -213,25 +254,30 @@ const Login = () => {
                 <LoginFailMessage>{loginFailed?.message}</LoginFailMessage>
               )}
               <LoginButton color="primary" onClick={authenticate}>
-                Sign In
-                <FontAwesomeIcon
-                  css={`
-                    margin-left: 6px;
-                  `}
-                  icon={faArrowRight}
-                />
+                <h5>
+                  Sign In
+                  <FontAwesomeIcon
+                    css={`
+                      margin-top: 0;
+                      margin-left: 6px;
+                    `}
+                    icon={faArrowRight}
+                  />
+                </h5>
               </LoginButton>
               <MicrosoftLoginButton
                 color="primary"
                 onClick={authenticateMicrosoft}
               >
-                Sign in with Microsoft
-                <FontAwesomeIcon
-                  css={`
-                    margin-left: 6px;
-                  `}
-                  icon={faExternalLinkAlt}
-                />
+                <h5>
+                  Sign in with Microsoft
+                  <FontAwesomeIcon
+                    css={`
+                      margin-left: 6px;
+                    `}
+                    icon={faExternalLinkAlt}
+                  />
+                </h5>
               </MicrosoftLoginButton>
             </Form>
             <Footer>
@@ -245,7 +291,12 @@ const Login = () => {
               >
                 <FooterLinks>
                   <div>
-                    <a href="https://www.minecraft.net/it-it/password/forgot">
+                    <a href="https://www.minecraft.net/en-us/store/minecraft-java-edition/buy">
+                      CREATE AN ACCOUNT
+                    </a>
+                  </div>
+                  <div>
+                    <a href="https://www.minecraft.net/en-us/password/forgot/">
                       FORGOT PASSWORD
                     </a>
                   </div>
@@ -254,57 +305,18 @@ const Login = () => {
                   css={`
                     cursor: pointer;
                   `}
-                  onClick={() => dispatch(openModal('ChangeLogs'))}
+                  onClick={() => dispatch(openModal('Changelogs'))}
                 >
                   v{version}
                 </div>
               </div>
-              <p
-                css={`
-                  font-size: 10px;
-                `}
-              >
-                Sign in with your Mojang Account. By doing so, you accept all
-                our policies and terms stated below.
-              </p>
-              <div
-                css={`
-                  margin-top: 20px;
-                  font-size: 10px;
-                  display: flex;
-                  width: 100%;
-                  text-align: center;
-                  flex-direction: row;
-                  span {
-                    text-decoration: underline;
-                    cursor: pointer;
-                  }
-                `}
-              >
-                <span
-                  onClick={() =>
-                    dispatch(openModal('PolicyModal', { policy: 'privacy' }))
-                  }
-                >
-                  Privacy Policy
-                </span>
-                <span
-                  onClick={() =>
-                    dispatch(openModal('PolicyModal', { policy: 'tos' }))
-                  }
-                >
-                  Terms and Conditions
-                </span>
-                <span
-                  onClick={() =>
-                    dispatch(
-                      openModal('PolicyModal', { policy: 'acceptableuse' })
-                    )
-                  }
-                >
-                  Acceptable Use Policy
-                </span>
-              </div>
+              <Status>
+                {'   '}Auth:{' '}
+                <StatusIcon color={status['authserver.mojang.com']} />
+                Session: <StatusIcon color={status['session.minecraft.net']} />
+                Skins: <StatusIcon color={status['textures.minecraft.net']} />
+                API: <StatusIcon color={status['api.mojang.com']} />
+              </Status>
             </Footer>
           </LeftSide>
           <Background transitionState={transitionState}>
@@ -312,7 +324,10 @@ const Login = () => {
               <source src={backgroundVideo} type="video/webm" />
             </video>
           </Background>
-          <Loading transitionState={transitionState}>Loading...</Loading>
+          <Loading transitionState={transitionState}>
+            {' '}
+            <FontAwesomeIcon spin size="4x" icon={faSpinner} />
+          </Loading>
         </Container>
       )}
     </Transition>

@@ -1,4 +1,4 @@
-name: GDLauncher CI
+name: KoalaLauncher CI
 
 on:
   push:
@@ -26,11 +26,10 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
-      - name: Use Node.js 16.17.0
+      - name: Use Node.js 19.3.0
         uses: actions/setup-node@v1
         with:
-          node-version: '16.17.0'
-
+          node-version: '19.3.0'
       - name: Install Nightly
         run: |
           rustup toolchain install nightly
@@ -53,9 +52,6 @@ jobs:
       - name: npm run install
         run: |
           npm i --legacy-peer-deps
-      - name: npm run lint
-        run: |
-          npm run lint
       - name: npm run release for windows
         if: matrix.os == 'windows-latest' && github.event_name == 'push'
         env:
@@ -70,6 +66,7 @@ jobs:
           SOURCE_MAPS_UPLOAD: "${{ github.ref == 'refs/heads/releases' && secrets.SENTRY_UPLOAD_SOURCE_MAPS_URL || '' }}"
           SENTRY_AUTH: "${{ github.ref == 'refs/heads/releases' && secrets.SENTRY_AUTH || '' }}"
           REACT_CF_API_KEY: "${{ secrets.CF_API_KEY }}"
+          NODE_OPTIONS: "--openssl-legacy-provider"
         run: |
           npm run release
       - name: npm run release for mac and linux
@@ -86,6 +83,7 @@ jobs:
           SOURCE_MAPS_UPLOAD: "${{ github.ref == 'refs/heads/releases' && secrets.SENTRY_UPLOAD_SOURCE_MAPS_URL || '' }}"
           SENTRY_AUTH: "${{ github.ref == 'refs/heads/releases' && secrets.SENTRY_AUTH || '' }}"
           REACT_CF_API_KEY: "${{ secrets.CF_API_KEY }}"
+          NODE_OPTIONS: "--openssl-legacy-provider"
         run: |
           npm run release
       - name: upload release to gh releases
@@ -97,7 +95,7 @@ jobs:
       - uses: actions/upload-artifact@v1
         if: matrix.os == 'macos-latest'
         with:
-          name: MacOs Release
+          name: macOS Release
           path: deploy
 
       - uses: actions/upload-artifact@v1
@@ -119,6 +117,6 @@ jobs:
           JOB_STATUS: ${{ job.status }}
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
         run: |
-          git clone https://github.com/gorilla-devs/github-actions-discord-webhook.git webhook
+          git clone https://github.com/KoalaDevs/github-actions-discord-webhook.git webhook
           bash webhook/send.sh $JOB_STATUS $WEBHOOK_URL
         shell: bash

@@ -15,7 +15,6 @@ import {
   faToilet,
   faNewspaper,
   faFolder,
-  faFire,
   faSort
 } from '@fortawesome/free-solid-svg-icons';
 import { Select, Tooltip, Button, Switch, Input, Checkbox } from 'antd';
@@ -38,6 +37,7 @@ import { updateConcurrentDownloads } from '../../../reducers/actions';
 import { openModal } from '../../../reducers/modals/actions';
 import HorizontalLogo from '../../../../ui/HorizontalLogo';
 import { extractFace } from '../../../../app/desktop/utils';
+import curseforgeIcon from '../../../assets/curseforgeIcon.webp';
 
 const Title = styled.div`
   margin-top: 30px;
@@ -200,7 +200,7 @@ const General = () => {
       .invoke('getAppdataPath')
       .then(appData =>
         fsa
-          .readFile(path.join(appData, 'gdlauncher_next', 'rChannel'))
+          .readFile(path.join(appData, 'koalalauncher', 'rChannel'))
           .then(v => setReleaseChannel(parseInt(v.toString(), 10)))
           .catch(() => setReleaseChannel(0))
       )
@@ -222,7 +222,7 @@ const General = () => {
   const changeDataPath = async () => {
     setLoadingMoveUserData(true);
     const appData = await ipcRenderer.invoke('getAppdataPath');
-    const appDataPath = path.join(appData, 'gdlauncher_next');
+    const appDataPath = path.join(appData, 'koalalauncher');
 
     const notCopiedFiles = [
       'Cache',
@@ -331,7 +331,7 @@ const General = () => {
             const appData = await ipcRenderer.invoke('getAppdataPath');
             setReleaseChannel(e);
             await fsa.writeFile(
-              path.join(appData, 'gdlauncher_next', 'rChannel'),
+              path.join(appData, 'koalalauncher', 'rChannel'),
               e.toString()
             );
           }}
@@ -395,7 +395,16 @@ const General = () => {
         </Select>
       </Content>
       <Title>
-        Preferred Curse Release Channel &nbsp; <FontAwesomeIcon icon={faFire} />
+        Preferred Curse Release Channel &nbsp;{' '}
+        <img
+          src={curseforgeIcon}
+          alt="CurseForge"
+          css={`
+            margin-right: 4px;
+            cursor: pointer;
+            width: 22px;
+          `}
+        />
       </Title>
       <Content>
         <p>
@@ -510,7 +519,7 @@ const General = () => {
           `}
           onClick={async () => {
             const appData = await ipcRenderer.invoke('getAppdataPath');
-            const appDataPath = path.join(appData, 'gdlauncher_next');
+            const appDataPath = path.join(appData, 'koalalauncher');
             setDataPath(appDataPath);
           }}
         >

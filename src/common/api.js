@@ -1,6 +1,9 @@
 // @flow
 import axios from 'axios';
 import qs from 'querystring';
+import path from 'path';
+import fse from 'fs-extra';
+import os from 'os';
 import {
   MOJANG_APIS,
   FORGESVC_URL,
@@ -12,11 +15,22 @@ import {
   MICROSOFT_XSTS_AUTH_URL,
   MINECRAFT_SERVICES_URL,
   FTB_API_URL,
-  JAVA_LATEST_MANIFEST_URL
+  JAVA_LATEST_MANIFEST_URL,
+  PASTEBIN_API_KEY,
+  MODRINTH_API_URL
 } from './utils/constants';
 import { sortByDate, getMcManifestUrl } from './utils';
 import ga from './utils/analytics';
+import { downloadFile } from '../app/desktop/utils/downloader';
+// eslint-disable-next-line import/no-cycle
+import { extractAll } from '../app/desktop/utils';
 
+const modrinthClient = axios.create({
+  baseURL: MODRINTH_API_URL,
+  headers: {
+    // 'User-Agent': `KoalaDevs/KoalaLauncher/${appVersion}`
+  }
+});
 const axioInstance = axios.create({
   headers: {
     'X-API-KEY': '$2a$10$5BgCleD8.rLQ5Ix17Xm2lOjgfoeTJV26a1BXmmpwrOemgI517.nuC',
@@ -31,6 +45,10 @@ const trackFTBAPI = () => {
 
 const trackCurseForgeAPI = () => {
   ga.sendCustomEvent('CurseForgeAPICall');
+};
+
+const trackModrinthAPI = () => {
+  ga.sendCustomEvent('ModrinthAPICall');
 };
 
 // Microsoft Auth
@@ -185,6 +203,25 @@ export const imgurPost = (image, onProgress) => {
   });
 };
 
+export const pasteBinPost = code => {
+  const bodyFormData = new FormData();
+  bodyFormData.append('api_dev_key', PASTEBIN_API_KEY);
+  bodyFormData.append('api_option', 'paste');
+  bodyFormData.append('api_paste_code', code);
+
+  const config = {
+    headers: {
+      'content-type': 'multipart/form-data'
+    }
+  };
+
+  return axios.post(
+    'https://pastebin.com/api/api_post.php',
+    bodyFormData,
+    config.headers
+  );
+};
+
 export const mcInvalidate = (accessToken, clientToken) => {
   return axios.post(
     `${MOJANG_APIS}/invalidate`,
@@ -231,9 +268,9 @@ export const getFabricJson = ({ mcVersion, loaderVersion }) => {
 
 // FORGE ADDONS
 
-export const getAddon = async projectID => {
+export const getAddon = async modpackId => {
   trackCurseForgeAPI();
-  const url = `${FORGESVC_URL}/mods/${projectID}`;
+  const url = `${FORGESVC_URL}/mods/${modpackId}`;
   const { data } = await axioInstance.get(url);
   return data?.data;
 };
@@ -250,14 +287,14 @@ export const getMultipleAddons = async addons => {
   return data?.data;
 };
 
-export const getAddonFiles = async projectID => {
+export const getAddonFiles = async modpackId => {
   trackCurseForgeAPI();
   // Aggregate results in case of multiple pages
   const results = [];
   let hasMore = true;
 
   while (hasMore) {
-    const url = `${FORGESVC_URL}/mods/${projectID}/files?pageSize=400&index=${results.length}`;
+    const url = `${FORGESVC_URL}/mods/${modpackId}/files?pageSize=400&index=${results.length}`;
     const { data } = await axioInstance.get(url);
     results.push(...(data.data || []));
 
@@ -267,16 +304,16 @@ export const getAddonFiles = async projectID => {
   return results.sort(sortByDate);
 };
 
-export const getAddonDescription = async projectID => {
+export const getAddonDescription = async modpackId => {
   trackCurseForgeAPI();
-  const url = `${FORGESVC_URL}/mods/${projectID}/description`;
+  const url = `${FORGESVC_URL}/mods/${modpackId}/description`;
   const { data } = await axioInstance.get(url);
   return data?.data;
 };
 
-export const getAddonFile = async (projectID, fileID) => {
+export const getAddonFile = async (modpackId, fileID) => {
   trackCurseForgeAPI();
-  const url = `${FORGESVC_URL}/mods/${projectID}/files/${fileID}`;
+  const url = `${FORGESVC_URL}/mods/${modpackId}/files/${fileID}`;
   const { data } = await axioInstance.get(url);
   return data?.data;
 };
@@ -289,15 +326,15 @@ export const getAddonsByFingerprint = async fingerprints => {
   return data?.data;
 };
 
-export const getAddonFileChangelog = async (projectID, fileID) => {
+export const getAddonFileChangelog = async (modpackId, fileID) => {
   trackCurseForgeAPI();
-  const url = `${FORGESVC_URL}/mods/${projectID}/files/${fileID}/changelog`;
+  const url = `${FORGESVC_URL}/mods/${modpackId}/files/${fileID}/changelog`;
   const { data } = await axioInstance.get(url);
 
   return data?.data;
 };
 
-export const getAddonCategories = async () => {
+export const getCurseForgeCategories = async () => {
   trackCurseForgeAPI();
   const url = `${FORGESVC_URL}/categories?gameId=432`;
   const { data } = await axioInstance.get(url);
@@ -311,7 +348,7 @@ export const getCFVersionIds = async () => {
   return data.data;
 };
 
-export const getSearch = async (
+export const getCurseForgeSearch = async (
   type,
   searchFilter,
   pageSize,
@@ -408,4 +445,254 @@ export const getFTBSearch = async searchText => {
   trackFTBAPI();
   const url = `${FTB_API_URL}/modpack/search/1000?term=${searchText}`;
   return axios.get(url);
+};
+
+/**
+ * @param {number} offset
+ * @returns {Promise<ModrinthSearchResult[]>}
+ */
+export const getModrinthMostPlayedModpacks = async (offset = 0) => {
+  trackModrinthAPI();
+  const url = `/search?limit=20&offset=${offset}&index=downloads&facets=[["project_type:modpack"]]`;
+  const { data } = await modrinthClient.get(url);
+  return data;
+};
+
+/**
+ * @param {string} query
+ * @param {'mod'|'modpack'} projectType
+ * @param {string} gameVersion
+ * @param {string[]} categories
+ * @param {number} index
+ * @param {number} offset
+ * @returns {Promise<ModrinthSearchResult[]>}
+ */
+export const getModrinthSearchResults = async (
+  query,
+  projectType,
+  gameVersion = null,
+  categories = [],
+  index = 'relevance',
+  offset = 0
+) => {
+  trackModrinthAPI();
+  const facets = [];
+
+  if (projectType === 'MOD') {
+    facets.push(['project_type:mod']);
+  }
+  if (projectType === 'MODPACK') {
+    facets.push(['project_type:modpack']);
+  }
+  if (gameVersion) {
+    facets.push([`versions:${gameVersion}`]);
+  }
+  // remove falsy values (i.e. null/undefined) from categories before constructing facets
+  const filteredCategories = categories.filter(cat => !!cat);
+  if (filteredCategories) {
+    facets.push(...filteredCategories.map(cat => [`categories:${cat}`]));
+  }
+
+  const { data } = await modrinthClient.get(`/search`, {
+    params: {
+      limit: 20,
+      query: query ?? undefined,
+      facets: facets ? JSON.stringify(facets) : undefined,
+      index: index ?? undefined,
+      offset: offset ?? undefined
+    }
+  });
+
+  return data;
+};
+
+/**
+ * @param {string} modpackId
+ * @returns {Promise<ModrinthProject>}
+ */
+export const getModrinthProject = async modpackId => {
+  return (await getModrinthProjects([modpackId])).at(0) ?? null;
+};
+
+/**
+ * @param {string[]} modpackIds
+ * @returns {Promise<ModrinthProject[]>}
+ */
+export const getModrinthProjects = async modpackIds => {
+  trackModrinthAPI();
+  try {
+    const url = `/projects?ids=${JSON.stringify(modpackIds)}`;
+    const { data } = await modrinthClient.get(url);
+    return data.map(fixModrinthProjectObject);
+  } catch {
+    return { status: 'error' };
+  }
+};
+
+/**
+ * @param {string} modpackId
+ * @returns {Promise<ModrinthVersion[]>}
+ */
+export const getModrinthProjectVersions = async modpackId => {
+  trackModrinthAPI();
+  try {
+    const url = `/project/${modpackId}/version`;
+    const { data } = await modrinthClient.get(url);
+    return data;
+  } catch {
+    return { status: 'error' };
+  }
+};
+
+/**
+ * @param {string} versionId
+ * @returns {Promise<ModrinthVersion>}
+ */
+export const getModrinthVersion = async versionId => {
+  return (await getModrinthVersions([versionId])).at(0) ?? null;
+};
+
+/**
+ * @param {string[]} versionIds
+ * @returns {Promise<ModrinthVersion[]>}
+ */
+export const getModrinthVersions = async versionIds => {
+  trackModrinthAPI();
+  try {
+    const url = `versions?ids=${JSON.stringify(versionIds)}`;
+    const { data } = await modrinthClient.get(url);
+    return data || [];
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// TODO: Move override logic out of this function
+// TODO: Do overrides need to be applied after the pack is installed?
+/**
+ * @param {string} versionId
+ * @param {string} instancePath
+ * @returns {Promise<ModrinthManifest>}
+ */
+export const getModrinthVersionManifest = async (versionId, instancePath) => {
+  try {
+    // get download link for the metadata archive
+    const version = await getModrinthVersion(versionId);
+    const file = version.files.find(f => f.filename.endsWith('.mrpack'));
+
+    // clean temp directory
+    const tmp = path.join(os.tmpdir(), 'rPLauncher_Download');
+    await fse.rm(tmp, { recursive: true, force: true });
+
+    // download metadata archive
+    await downloadFile(path.join(tmp, file.filename), file.url);
+
+    // Wait 500ms to avoid `The process cannot access the file because it is being used by another process.`
+    await new Promise(resolve => {
+      setTimeout(() => resolve(), 500);
+    });
+
+    // extract archive to temp folder
+    await extractAll(path.join(tmp, file.filename), tmp, { yes: true });
+
+    await fse.move(path.join(tmp, 'overrides'), path.join(instancePath), {
+      overwrite: true
+    });
+
+    // move manifest to instance root
+    await fse.move(
+      path.join(tmp, 'modrinth.index.json'),
+      path.join(instancePath, 'modrinth.index.json'),
+      { overwrite: true }
+    );
+
+    // clean temp directory
+    await fse.rm(tmp, { recursive: true, force: true });
+
+    const manifest = await fse.readJson(
+      path.join(instancePath, 'modrinth.index.json')
+    );
+
+    return manifest;
+  } catch (err) {
+    console.error(err);
+
+    return { status: 'error' };
+  }
+};
+
+/**
+ * @param {string} versionId
+ * @returns {Promise<string>}
+ */
+export const getModrinthVersionChangelog = async versionId => {
+  return (await getModrinthVersion(versionId)).changelog;
+};
+
+/**
+ * @param {string} userId
+ * @returns {Promise<ModrinthUser>}
+ */
+export const getModrinthUser = async userId => {
+  trackModrinthAPI();
+  try {
+    const url = `/user/${userId}`;
+    const { data } = await modrinthClient.get(url);
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+//! HACK
+const fixModrinthProjectObject = project => {
+  return {
+    ...project,
+    name: project.title
+  };
+};
+
+/**
+ * @returns {Promise<ModrinthCategory>}
+ */
+export const getModrinthCategories = async () => {
+  trackModrinthAPI();
+  try {
+    const url = '/tag/category';
+    const { data } = await modrinthClient.get(url);
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+/**
+ * @param {string} modpackId
+ * @returns {Promise<ModrinthTeamMember[]>}
+ */
+export const getModrinthProjectMembers = async modpackId => {
+  trackModrinthAPI();
+  try {
+    const url = `/project/${modpackId}/members`;
+    const { data } = await modrinthClient.get(url);
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+/**
+ * @param {string[]} hashes
+ * @param {'sha1' | 'sha512'} algorithm
+ * @returns {Promise<{[hash: string]: ModrinthVersion}[]>}
+ */
+export const getVersionsFromHashes = async (hashes, algorithm) => {
+  trackModrinthAPI();
+  try {
+    const url = '/version_files';
+    const { data } = await modrinthClient.post(url, { hashes, algorithm });
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
 };

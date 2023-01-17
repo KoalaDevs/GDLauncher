@@ -24,7 +24,7 @@ import {
 } from '../../app/desktop/utils';
 
 const ModOverview = ({
-  projectID,
+  modpackId,
   fileID,
   gameVersions,
   instanceName,
@@ -45,8 +45,8 @@ const ModOverview = ({
     const init = async () => {
       setLoadingFiles(true);
       await Promise.all([
-        getAddon(projectID).then(data => setAddon(data)),
-        getAddonDescription(projectID).then(data => {
+        getAddon(modpackId).then(data => setAddon(data)),
+        getAddonDescription(modpackId).then(data => {
           // Replace the beginning of all relative URLs with the Curseforge URL
           const modifiedData = data.replace(
             /href="(?!http)/g,
@@ -54,11 +54,11 @@ const ModOverview = ({
           );
           setDescription(modifiedData);
         }),
-        getAddonFiles(projectID).then(async data => {
+        getAddonFiles(modpackId).then(async data => {
           const isFabric =
-            getPatchedInstanceType(instance) === FABRIC && projectID !== 361988;
+            getPatchedInstanceType(instance) === FABRIC && modpackId !== 361988;
           const isForge =
-            getPatchedInstanceType(instance) === FORGE || projectID === 361988;
+            getPatchedInstanceType(instance) === FORGE || modpackId === 361988;
           let filteredFiles = [];
           if (isFabric) {
             filteredFiles = filterFabricFilesByVersion(data, gameVersions);
@@ -153,11 +153,11 @@ const ModOverview = ({
                     </div>
                   )}
                   <div>
-                    <label>Last Update: </label>{' '}
+                    <label>Last Updated: </label>{' '}
                     {formatDate(addon?.dateModified)}
                   </div>
                   <div>
-                    <label>MC version: </label>
+                    <label>Minecraft Vesrion: </label>
                     {addon?.latestFilesIndexes[0]?.gameVersion}
                   </div>
                 </ParallaxContentInfos>
@@ -181,7 +181,7 @@ const ModOverview = ({
                   onClick={() => {
                     dispatch(
                       openModal('ModChangelog', {
-                        modpackId: projectID,
+                        modpackId: modpackId,
                         files
                       })
                     );
@@ -312,7 +312,7 @@ const ModOverview = ({
               }
               const newFile = await dispatch(
                 installMod(
-                  projectID,
+                  modpackId,
                   selectedItem,
                   instanceName,
                   gameVersions,

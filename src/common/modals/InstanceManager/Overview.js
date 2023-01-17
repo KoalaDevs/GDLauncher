@@ -296,8 +296,9 @@ const Overview = ({ instanceName, background, manifest }) => {
           css={`
             display: flex;
             justify-content: space-between;
-            width: 100%;
+            width: 100% + 20px;
             margin-top: 20px;
+            margin-left: -20px;
           `}
         >
           <Card
@@ -307,31 +308,18 @@ const Overview = ({ instanceName, background, manifest }) => {
             defaultValue={config?.loader}
             icon={<FontAwesomeIcon icon={faCog} />}
           >
+            {config?.loader?.loaderType === 'vanilla' ? 'Vanilla ' : ''}
+            {config?.loader?.loaderType === 'fabric' ? 'Fabric ' : ''}
+            {config?.loader?.loaderType === 'forge' ? 'Forge ' : ''}
             {config?.loader?.mcVersion}
-          </Card>
-          <Card
-            title="Modloader"
-            color={props => props.theme.palette.colors.darkYellow}
-            instanceName={instanceName}
-            defaultValue={config?.loader}
-            icon={<FontAwesomeIcon icon={faCog} />}
-          >
-            {config?.loader?.loaderType}
-          </Card>
-          <Card
-            title="Modloader Version"
-            color={props => props.theme.palette.colors.lightBlue}
-            instanceName={instanceName}
-            defaultValue={config?.loader}
-            icon={
-              (config?.loader?.loaderVersion || '-') !== '-' ? (
-                <FontAwesomeIcon icon={faCog} />
-              ) : null
-            }
-          >
-            {config?.loader?.loaderType === 'forge'
+            {config?.loader.loaderType === 'fabric' ? ' - ' : ''}
+            {config?.loader.loaderType === 'fabric'
+              ? config?.loader?.loaderVersion || '-'
+              : ''}
+            {config?.loader.loaderType === 'forge' ? ' - ' : ''}
+            {config?.loader.loaderType === 'forge'
               ? config?.loader?.loaderVersion?.split('-')[1]
-              : config?.loader?.loaderVersion || '-'}
+              : ''}
           </Card>
         </OverviewCard>
         <OverviewCard

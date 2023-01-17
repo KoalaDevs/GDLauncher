@@ -1,3 +1,5 @@
+export const MC_MANIFEST_URL =
+  'https://launchermeta.mojang.com/mc/game/version_manifest.json';
 export const MC_RESOURCES_URL = 'https://resources.download.minecraft.net';
 export const FABRIC_APIS = 'https://meta.fabricmc.net/v2';
 export const GDL_LEGACYJAVAFIXER_MOD_URL =
@@ -7,8 +9,9 @@ export const JAVA_MANIFEST_URL = 'https://cdn.gdlauncher.com/openjdk8.json';
 export const LATEST_JAVA_VERSION = 17;
 export const JAVA_LATEST_MANIFEST_URL =
   'https://cdn.gdlauncher.com/openjdk17.json';
-export const MAVEN_REPO = 'http://central.maven.org/maven2';
+export const MAVEN_REPO = 'https://central.maven.org/maven2';
 export const MC_LIBRARIES_URL = 'https://libraries.minecraft.net';
+export const MODRINTH_API_URL = 'https://api.modrinth.com/v2';
 export const FORGESVC_URL = 'https://api.curseforge.com/v1';
 export const FTB_API_URL = 'https://api.modpacks.ch/public';
 export const FTB_MODPACK_URL = 'https://feed-the-beast.com/modpack';
@@ -18,12 +21,14 @@ export const FMLLIBS_OUR_BASE_URL = 'https://fmllibs.gdevs.io';
 export const FMLLIBS_FORGE_BASE_URL =
   'https://files.minecraftforge.net/fmllibs';
 export const IMGUR_CLIENT_ID = '509a564cf4466c9';
+export const PASTEBIN_API_KEY = '478d52a29c7e952ba116d09bd9625fde';
 export const FABRIC = 'fabric';
 export const FORGE = 'forge';
 export const VANILLA = 'vanilla';
 
 export const CURSEFORGE = 'curseforge';
 export const FTB = 'ftb';
+export const MODRINTH = 'modrinth';
 
 export const ACCOUNT_MOJANG = 'ACCOUNT_MOJANG';
 export const ACCOUNT_MICROSOFT = 'ACCOUNT_MICROSOFT';

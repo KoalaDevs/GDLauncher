@@ -315,9 +315,9 @@ const Row = memo(({ index, style, data }) => {
   } = data;
   const item = items[index];
   const isUpdateAvailable =
-    latestMods[item.projectID] &&
-    latestMods[item.projectID].id !== item.fileID &&
-    latestMods[item.projectID].releaseType <= curseReleaseChannel;
+    latestMods[item.modpackId] &&
+    latestMods[item.modpackId].id !== item.fileID &&
+    latestMods[item.modpackId].releaseType <= curseReleaseChannel;
   const dispatch = useDispatch();
 
   const tempPath = useSelector(_getTempPath);
@@ -367,16 +367,22 @@ const Row = memo(({ index, style, data }) => {
           </div>
           <div
             onClick={() => {
-              if (!item.fileID) return;
-              dispatch(
-                openModal('ModOverview', {
-                  projectID: item.projectID,
-                  fileID: item.fileID,
-                  fileName: item.fileName,
-                  gameVersions,
-                  instanceName
-                })
-              );
+              if (item.fileID) {
+                dispatch(
+                  openModal('ModOverview', {
+                    modSource: item.modSource,
+                    modpackId: item.modpackId,
+                    fileID: item.fileID,
+                    fileName: item.fileName,
+                    gameVersions,
+                    instanceName
+                  })
+                );
+              } else {
+                console.error(
+                  `Mod "${name}" does not have a valid file/version ID. Cannot open Mod Overview.`
+                );
+              }
             }}
             className="rowCenterContent"
           >
@@ -411,7 +417,7 @@ const Row = memo(({ index, style, data }) => {
                       updateMod(
                         instanceName,
                         item,
-                        latestMods[item.projectID].id,
+                        latestMods[item.modpackId].id,
                         gameVersions
                       )
                     );
@@ -610,9 +616,9 @@ const Mods = ({ instanceName }) => {
   const hasModUpdates = useMemo(() => {
     return instance?.mods?.find(v => {
       const isUpdateAvailable =
-        latestMods[v.projectID] &&
-        latestMods[v.projectID].id !== v.fileID &&
-        latestMods[v.projectID].releaseType <= curseReleaseChannel;
+        latestMods[v.modpackId] &&
+        latestMods[v.modpackId].id !== v.fileID &&
+        latestMods[v.modpackId].releaseType <= curseReleaseChannel;
       return isUpdateAvailable;
     });
   }, [instance.mods, latestMods]);

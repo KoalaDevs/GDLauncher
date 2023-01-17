@@ -64,10 +64,15 @@ const modalsComponentLookupTable = {
   OptedOutModsList: AsyncComponent(
     lazy(() => import('../modals/OptedOutModsList'))
   ),
-  BisectHosting: AsyncComponent(lazy(() => import('../modals/BisectHosting'))),
   Onboarding: AsyncComponent(lazy(() => import('../modals/Onboarding'))),
   ModOverview: AsyncComponent(lazy(() => import('../modals/ModOverview'))),
   ModChangelog: AsyncComponent(lazy(() => import('../modals/ModChangelog'))),
+  CurseForgeModsBrowser: AsyncComponent(
+    lazy(() => import('../modals/CurseForgeModsBrowser'))
+  ),
+  ModrinthModsBrowser: AsyncComponent(
+    lazy(() => import('../modals/ModrinthModsBrowser'))
+  ),
   ModsBrowser: AsyncComponent(lazy(() => import('../modals/ModsBrowser'))),
   JavaSetup: AsyncComponent(lazy(() => import('../modals/JavaSetup'))),
   ModsUpdater: AsyncComponent(lazy(() => import('../modals/ModsUpdater'))),
@@ -77,10 +82,6 @@ const modalsComponentLookupTable = {
   ChangeLogs: AsyncComponent(lazy(() => import('../modals/ChangeLogs'))),
   McVersionChanger: AsyncComponent(
     lazy(() => import('../modals/McVersionChanger'))
-  ),
-  PolicyModal: AsyncComponent(lazy(() => import('../modals/PolicyModal'))),
-  InstanceStartupAd: AsyncComponent(
-    lazy(() => import('../modals/InstanceStartupAd'))
   ),
   InstanceDownloadFailed: AsyncComponent(
     lazy(() => import('../modals/InstanceDownloadFailed'))

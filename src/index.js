@@ -19,7 +19,7 @@ import ModalsManager from './common/components/ModalsManager';
 // import { version } from '../package.json';
 
 import 'typeface-roboto';
-import 'inter-ui';
+import 'typeface-averia-sans-libre';
 import ErrorBoundary from './common/ErrorBoundary';
 
 const Root =
@@ -50,7 +50,7 @@ window.addEventListener('mouseup', e => {
 //     if (!dsn) {
 //       console.warn('No error monitoring token provided.');
 //       console.warn(
-//         'This is not a GDLauncher official release but it might be a testing release.'
+//         'This is not a KoalaLauncher official release but it might be a testing release.'
 //       );
 //       return;
 //     }

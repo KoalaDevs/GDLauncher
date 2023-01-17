@@ -14,8 +14,10 @@ import FTBModpacks from './FTBModpacks';
 import Import from './Import';
 import NewInstance from './NewInstance';
 import minecraftIcon from '../../assets/minecraftIcon.png';
-import curseForgeIcon from '../../assets/curseforgeIcon.webp';
+import curseforgeIcon from '../../assets/curseforgeIcon.webp';
 import ftbIcon from '../../assets/ftbIcon.webp';
+import modrinthIcon from '../../assets/modrinthIcon.webp';
+import ModrinthModpacks from './ModrinthModpacks';
 
 const Content = ({
   in: inProp,
@@ -46,6 +48,11 @@ const Content = ({
       setOverrideNextStepOnClick={setOverrideNextStepOnClick}
     />,
     <FTBModpacks
+      setVersion={setVersion}
+      setStep={setStep}
+      setModpack={setModpack}
+    />,
+    <ModrinthModpacks
       setVersion={setVersion}
       setStep={setStep}
       setModpack={setModpack}
@@ -90,15 +97,15 @@ const Content = ({
                         width: 22px;
                       `}
                     />
-                    Vanilla
+                    Custom
                   </Radio.Button>
                   <Radio.Button value={1}>
-                    <img
-                      src={curseForgeIcon}
+                  <img
+                      src={curseforgeIcon}
                       css={`
                         margin-right: 4px;
                         cursor: pointer;
-                        width: 20px;
+                        width: 22px;
                       `}
                     />
                     CurseForge
@@ -115,6 +122,17 @@ const Content = ({
                       `}
                     />
                     FTB
+                  </Radio.Button>
+                  <Radio.Button value={4}>
+                    <img
+                      src={modrinthIcon}
+                      css={`
+                        margin-right: 4px;
+                        cursor: pointer;
+                        width: 20px;
+                      `}
+                    />
+                    Modrinth
                   </Radio.Button>
                   <Radio.Button value={2}>
                     <FontAwesomeIcon

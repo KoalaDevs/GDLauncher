@@ -131,8 +131,8 @@ const commonConfig = {
   config: {
     generateUpdatesFilesForAllChannels: true,
     npmRebuild: false,
-    productName: 'GDLauncher',
-    appId: 'org.gorilladevs.GDLauncher',
+    productName: 'KoalaLauncher',
+    appId: 'org.gorilladevs.KoalaLauncher',
     files: [
       '!node_modules/**/*',
       'build/**/*',
@@ -189,9 +189,9 @@ const commonConfig = {
     },
     protocols: [
       {
-        name: 'gdlauncher',
+        name: 'KoalaLauncher',
         role: 'Viewer',
-        schemes: ['gdlauncher']
+        schemes: ['KoalaLauncher']
       }
     ]
   },
