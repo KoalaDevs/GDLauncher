@@ -168,7 +168,7 @@ checksum = "2dffe52ecf27772e601905b7522cb4ef790d2cc203488bbd0e2fe85fcb74566d"
 [[package]]
 name = "murmurhash32"
 version = "0.2.0"
-source = "git+https://github.com/KoalaDevs/murmurhash32.git#401640895f352c88ccc61670993eec49c10e730b"
+source = "git+https://github.com/gorilla-devs/murmurhash32.gitt#401640895f352c88ccc61670993eec49c10e730b"
 dependencies = [
  "byteorder",
 ]
