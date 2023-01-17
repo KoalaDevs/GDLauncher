@@ -7,24 +7,32 @@ import InfiniteLoader from 'react-window-infinite-loader';
 import ContentLoader from 'react-content-loader';
 import { transparentize } from 'polished';
 import { openModal } from '../../../reducers/modals/actions';
-import { FTB } from '../../../utils/constants';
-import { getFTBModpackVersionData } from '../../../api';
+import { MODRINTH } from '../../../utils/constants';
+import { getModrinthProject, getModrinthProjectVersions } from '../../../api';
 
-const selectFTBModpack = async (modpack, setVersion, setModpack, setStep) => {
-  const projectID = modpack.id;
-  const fileID = modpack.versions[modpack.versions.length - 1].id;
+const selectModrinthModpack = async (
+  projectID,
+  setVersion,
+  setModpack,
+  setStep
+) => {
+  // with a bit more fiddling the `getModrinthProject` call can be removed
+  const modpack = await getModrinthProject(projectID);
+  const version = (await getModrinthProjectVersions(projectID)).sort(
+    (a, b) => Date.parse(b.date_published) - Date.parse(a.date_published)
+  )[0];
 
-  const data = await getFTBModpackVersionData(modpack.id, fileID);
-
-  const forgeModloader = data.targets.find(v => v.type === 'modloader');
-  const mcVersion = data.targets.find(v => v.type === 'game').version;
+  // modpack versions should only ever have 1 loader and 1 minecraft version
+  // if this is not the case, the pack was configured incorrectly and would not have worked anyway
+  const loaderType = version.loaders[0];
+  const mcVersion = version.game_versions[0];
 
   setVersion({
-    loaderType: forgeModloader?.type,
+    loaderType,
     mcVersion,
     projectID,
-    fileID,
-    source: FTB
+    fileID: version.id,
+    source: MODRINTH
   });
   setModpack(modpack);
   setStep(1);
@@ -81,10 +89,11 @@ const ModpacksListWrapper = ({
       );
     }
 
-    const primaryImage = modpack.art.reduce((prev, curr) => {
-      if (!prev || curr.size < prev.size) return curr;
-      return prev;
-    });
+    const primaryImage =
+      modpack.gallery?.find(img => img.featured)?.url ||
+      modpack.gallery?.at(0)?.url ||
+      modpack.icon_url ||
+      '';
 
     return (
       <div
@@ -93,7 +102,7 @@ const ModpacksListWrapper = ({
           ...style,
           top: style.top + (index === 0 ? 0 : 8),
           height: style.height - (index === 0 ? 0 : 8),
-          background: `url('${primaryImage.url}')`,
+          background: `url('${primaryImage}')`,
           position: 'absolute',
           width: width - 8,
           backgroundRepeat: 'no-repeat',
@@ -102,28 +111,34 @@ const ModpacksListWrapper = ({
           margin: 0,
           borderRadius: 4
         }}
-        key={modpack.id}
+        key={modpack.project_id}
       >
         <Modpack>
-          <div>{modpack.name}</div>
+          <div>{modpack.title}</div>
         </Modpack>
         <ModpackHover>
           <div
             onClick={() => {
-              selectFTBModpack(modpack, setVersion, setModpack, setStep);
+              selectModrinthModpack(
+                modpack.project_id,
+                setVersion,
+                setModpack,
+                setStep
+              );
             }}
           >
             Download Latest
           </div>
           <div
-            onClick={() => {
+            onClick={async () => {
+              const realModpack = await getModrinthProject(modpack.project_id);
               dispatch(
                 openModal('ModpackDescription', {
-                  modpack,
+                  modpack: realModpack,
                   setStep,
                   setVersion,
                   setModpack,
-                  type: 'ftb'
+                  type: MODRINTH
                 })
               );
             }}

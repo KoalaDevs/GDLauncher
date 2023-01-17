@@ -5,8 +5,7 @@ import { Transition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faLongArrowAltRight,
-  faArchive,
-  faFire,
+  faArchive
 } from '@fortawesome/free-solid-svg-icons';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Spin, Radio } from 'antd';
@@ -15,7 +14,10 @@ import FTBModpacks from './FTBModpacks';
 import Import from './Import';
 import NewInstance from './NewInstance';
 import minecraftIcon from '../../assets/minecraftIcon.png';
+import curseforgeIcon from '../../assets/curseforgeIcon.webp';
 import ftbIcon from '../../assets/ftbIcon.webp';
+import modrinthIcon from '../../assets/modrinthIcon.webp';
+import ModrinthModpacks from './ModrinthModpacks';
 
 const Content = ({
   in: inProp,
@@ -46,6 +48,11 @@ const Content = ({
       setOverrideNextStepOnClick={setOverrideNextStepOnClick}
     />,
     <FTBModpacks
+      setVersion={setVersion}
+      setStep={setStep}
+      setModpack={setModpack}
+    />,
+    <ModrinthModpacks
       setVersion={setVersion}
       setStep={setStep}
       setModpack={setModpack}
@@ -93,12 +100,12 @@ const Content = ({
                     Custom
                   </Radio.Button>
                   <Radio.Button value={1}>
-                  <FontAwesomeIcon
-                      icon={faFire}
+                  <img
+                      src={curseforgeIcon}
                       css={`
                         margin-right: 4px;
                         cursor: pointer;
-                        width: 20px;
+                        width: 22px;
                       `}
                     />
                     CurseForge
@@ -115,6 +122,17 @@ const Content = ({
                       `}
                     />
                     FTB
+                  </Radio.Button>
+                  <Radio.Button value={4}>
+                    <img
+                      src={modrinthIcon}
+                      css={`
+                        margin-right: 4px;
+                        cursor: pointer;
+                        width: 20px;
+                      `}
+                    />
+                    Modrinth
                   </Radio.Button>
                   <Radio.Button value={2}>
                     <FontAwesomeIcon

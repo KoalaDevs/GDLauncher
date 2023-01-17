@@ -9,6 +9,7 @@ export const JAVA_LATEST_MANIFEST_URL =
   'https://cdn.gdlauncher.com/openjdk17.json';
 export const MAVEN_REPO = 'https://central.maven.org/maven2';
 export const MC_LIBRARIES_URL = 'https://libraries.minecraft.net';
+export const MODRINTH_API_URL = 'https://api.modrinth.com/v2';
 export const FORGESVC_URL = 'https://api.curseforge.com/v1';
 export const FTB_API_URL = 'https://api.modpacks.ch/public';
 export const FTB_MODPACK_URL = 'https://feed-the-beast.com/modpack';
@@ -25,6 +26,7 @@ export const VANILLA = 'vanilla';
 
 export const CURSEFORGE = 'curseforge';
 export const FTB = 'ftb';
+export const MODRINTH = 'modrinth';
 
 export const ACCOUNT_MOJANG = 'ACCOUNT_MOJANG';
 export const ACCOUNT_MICROSOFT = 'ACCOUNT_MICROSOFT';

@@ -16,14 +16,14 @@ import {
   faDownload,
   faEllipsisV,
   faCopy,
-  faFolder,
-  faFire
+  faFolder
 } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { Transition } from 'react-transition-group';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import fse from 'fs-extra';
 import makeDir from 'make-dir';
+import curseForgeIcon from '../../assets/curseforgeIcon.webp';
 import {
   _getInstance,
   _getInstancesPath,
@@ -361,20 +361,28 @@ const Row = memo(({ index, style, data }) => {
                 }
               }}
             />
-            {item.fileID && <FontAwesomeIcon icon={faFire} />}
+            {item.fileID && (
+              <img src={curseForgeIcon} height="15px" alt="curseforge" />
+            )}
           </div>
           <div
             onClick={() => {
-              if (!item.fileID) return;
-              dispatch(
-                openModal('ModOverview', {
-                  projectID: item.projectID,
-                  fileID: item.fileID,
-                  fileName: item.fileName,
-                  gameVersions,
-                  instanceName
-                })
-              );
+              if (item.fileID) {
+                dispatch(
+                  openModal('ModOverview', {
+                    modSource: item.modSource,
+                    projectID: item.projectID,
+                    fileID: item.fileID,
+                    fileName: item.fileName,
+                    gameVersions,
+                    instanceName
+                  })
+                );
+              } else {
+                console.error(
+                  `Mod "${name}" does not have a valid file/version ID. Cannot open Mod Overview.`
+                );
+              }
             }}
             className="rowCenterContent"
           >
