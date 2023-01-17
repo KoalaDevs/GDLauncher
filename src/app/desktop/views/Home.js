@@ -57,7 +57,7 @@ const Home = () => {
       }
       // try {
       //  const { data } = await axios.get(
-      //    'https://api.KoalaLauncher.com/announcement'
+      //    'https://api.gdlauncher.com/announcement'
       //  );
       //  setAnnoucement(data || null);
       // } catch (e) {

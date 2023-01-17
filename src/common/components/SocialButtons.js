@@ -38,7 +38,7 @@ const SocialButtons = () => {
         }
       `}
     >
-      <a href="https://discord.KoalaLauncher.com">
+      <a href="https://discord.gdlauncher.com">
         <div>
           <FontAwesomeIcon icon={faDiscord} size="lg" />
         </div>

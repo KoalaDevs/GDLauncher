@@ -174,7 +174,7 @@ export const librariesMapper = (libraries, librariesPath) => {
                 url: tempArr[k].url
                   .replace(
                     'libraries.minecraft.net',
-                    'cdn.KoalaLauncher.com/maven'
+                    'cdn.gdlauncher.com/maven'
                   )
                   .replace(/2.0-beta9/g, '2.0-beta9-fixed'),
                 path: tempArr[k].path.replace(/2.0-beta9/g, '2.0-beta9-fixed'),
@@ -190,7 +190,7 @@ export const librariesMapper = (libraries, librariesPath) => {
 
               // Assuming we can use 2.15
               tempArr[k] = {
-                url: `https://cdn.KoalaLauncher.com/maven/${mavenToArray(
+                url: `https://cdn.gdlauncher.com/maven/${mavenToArray(
                   patchedName,
                   native
                 ).join(path.sep)}`,

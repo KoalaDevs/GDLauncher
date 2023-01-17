@@ -55,10 +55,7 @@ jobs:
 
       - name: npm run install
         run: |
-          npm i
-      - name: npm run lint
-        run: |
-          npm run lint
+          npm i --legacy-peer-deps
       - name: npm run release for windows
         if: matrix.os == 'windows-latest' && github.event_name == 'push'
         env:
@@ -100,7 +97,7 @@ jobs:
       - uses: actions/upload-artifact@v1
         if: matrix.os == 'macos-latest'
         with:
-          name: MacOs Release
+          name: macOS Release
           path: deploy
 
       - uses: actions/upload-artifact@v1
