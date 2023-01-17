@@ -147,7 +147,7 @@ const ModsListWrapper = ({
 
     const item = items[index];
 
-    const isInstalled = installedMods.find(v => v.projectID === item?.id);
+    const isInstalled = installedMods.find(v => v.modpackId === item?.id);
     const primaryImage = item?.logo;
 
     if (!item) {
@@ -167,7 +167,7 @@ const ModsListWrapper = ({
         openModal('ModOverview', {
           modSource: CURSEFORGE,
           gameVersions,
-          projectID: item.id,
+          modpackId: item.id,
           ...(isInstalled && { fileID: isInstalled.fileID }),
           ...(isInstalled && { fileName: isInstalled.fileName }),
           instanceName

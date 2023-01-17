@@ -1000,15 +1000,15 @@ export const extractFace = async buffer => {
   return ImageBuffer.toString('base64');
 };
 
-export const normalizeModData = (data, projectID, modName) => {
+export const normalizeModData = (data, modpackId, modName) => {
   const temp = data;
   temp.name = modName;
   if (data.fileFingerprint) {
     temp.packageFingerprint = data.fileFingerprint;
   }
-  if (data.projectID && data.fileID) return temp;
+  if (data.modpackId && data.fileID) return temp;
   if (data.id) {
-    temp.projectID = projectID;
+    temp.modpackId = modpackId;
     temp.fileID = data?.file?.id || data.id;
   }
   return temp;
@@ -1134,7 +1134,7 @@ export const convertcurseForgeToCanonical = (
 
 export const getPatchedInstanceType = instance => {
   const isForge = instance.loader?.loaderType === FORGE;
-  const hasJumpLoader = (instance.mods || []).find(v => v.projectID === 361988);
+  const hasJumpLoader = (instance.mods || []).find(v => v.modpackId === 361988);
   if (isForge && !hasJumpLoader) {
     return FORGE;
   }

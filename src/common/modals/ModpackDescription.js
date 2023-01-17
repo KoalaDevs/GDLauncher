@@ -235,8 +235,8 @@ const ModpackDescription = ({
                   onClick={() => {
                     dispatch(
                       openModal('ModChangelog', {
-                        projectID: modpack.id,
-                        projectName: modpack.name,
+                        modpackId: modpack.id,
+                        modpackName: modpack.name,
                         files,
                         type
                       })
@@ -368,7 +368,7 @@ const ModpackDescription = ({
               const modpackFile = files.find(file => file.id === selectedId);
               setVersion({
                 loaderType: FORGE,
-                projectID: modpack.id,
+                modpackId: modpack.id,
                 fileID: modpackFile.id,
                 source: type
               });

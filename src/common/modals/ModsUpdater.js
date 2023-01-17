@@ -27,9 +27,9 @@ const ModsUpdater = ({ instanceName }) => {
   const filterAvailableUpdates = () => {
     return instance.mods.filter(mod => {
       return (
-        latestMods[mod.projectID] &&
-        latestMods[mod.projectID].id !== mod.fileID &&
-        latestMods[mod.projectID].releaseType <= curseReleaseChannel
+        latestMods[mod.modpackId] &&
+        latestMods[mod.modpackId].id !== mod.fileID &&
+        latestMods[mod.modpackId].releaseType <= curseReleaseChannel
       );
     });
   };
@@ -54,7 +54,7 @@ const ModsUpdater = ({ instanceName }) => {
           updateMod(
             instanceName,
             mod,
-            latestMods[mod.projectID].id,
+            latestMods[mod.modpackId].id,
             instance.loader?.mcVersion,
             // eslint-disable-next-line
             p => {
