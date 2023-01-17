@@ -3,6 +3,7 @@ const log = require('electron-log');
 
 let client;
 let activity;
+
 const initialAppStartup = Math.floor(Date.now() / 1000);
 
 const defaultValue = {
@@ -10,13 +11,7 @@ const defaultValue = {
   startTimestamp: initialAppStartup,
   largeImageKey: 'default_big',
   largeImageText: 'KoalaLauncher',
-  buttons: [
-    { label: 'Join Discord', url: 'https://invite.gg/KoalaDevs' },
-    {
-      label: 'Github',
-      url: 'https://github.com/KoalaDevs/KoalaLauncher'
-    }
-  ]
+  instance: false
 };
 
 exports.initRPC = () => {
@@ -29,7 +24,7 @@ exports.initRPC = () => {
     client.setActivity(activity);
   });
 
-  client.login({ clientId: '600470444893667328' }).catch(error => {
+  client.login({ clientId: '555898932467597312' }).catch(error => {
     if (error.message.includes('ENOENT')) {
       log.error('Unable to initialize Discord RPC, no client detected.');
     } else {
@@ -45,7 +40,6 @@ exports.update = details => {
     startTimestamp: Math.floor(Date.now() / 1000),
     details: `Playing ${details}`
   };
-  console.log(activity);
   client.setActivity(activity);
 };
 
