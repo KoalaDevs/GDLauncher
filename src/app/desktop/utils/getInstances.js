@@ -44,7 +44,7 @@ const getInstances = async instancesPath => {
           loaderType,
           mcVersion,
           loaderVersion,
-          modpackId,
+          projectID,
           fileID,
           source
         ] = config.modloader;
@@ -56,8 +56,8 @@ const getInstances = async instancesPath => {
             mcVersion,
             ...(loaderVersion && { loaderVersion }),
             ...(fileID && { fileID }),
-            ...(modpackId && { modpackId }),
-            ...(!source && fileID && modpackId && { source: CURSEFORGE })
+            ...(projectID && { projectID }),
+            ...(!source && fileID && projectID && { source: CURSEFORGE })
           }
         };
 
@@ -80,8 +80,8 @@ const getInstances = async instancesPath => {
           loader: {
             ...config.loader,
             ...(fileId && { fileID: fileId }),
-            ...(addonId && { modpackId: addonId }),
-            ...(addonID && { modpackId: addonID })
+            ...(addonId && { projectID: addonId }),
+            ...(addonID && { projectID: addonID })
           }
         };
 

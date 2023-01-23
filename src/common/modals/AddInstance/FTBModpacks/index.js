@@ -17,7 +17,7 @@ import pMap from 'p-map';
 let lastRequest;
 const FTBModpacks = ({ setStep, setModpack, setVersion }) => {
   const infiniteLoaderRef = useRef(null);
-  const [modpackIds, setModpackIds] = useState([]);
+  const [projectIDs, setModpackIds] = useState([]);
   const [modpacks, setModpacks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState('');
@@ -48,7 +48,7 @@ const FTBModpacks = ({ setStep, setModpack, setVersion }) => {
   }, 250);
 
   const loadMoreModpacks = async (reset = false) => {
-    if (modpackIds.length === 0) return;
+    if (projectIDs.length === 0) return;
     const reqObj = {};
     lastRequest = reqObj;
     if (!loading) {
@@ -63,7 +63,7 @@ const FTBModpacks = ({ setStep, setModpack, setVersion }) => {
       if (error) {
         setError(false);
       }
-      const idsToFetch = modpackIds.slice(
+      const idsToFetch = projectIDs.slice(
         modpacks.length,
         modpacks.length + 20
       );
