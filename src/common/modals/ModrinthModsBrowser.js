@@ -140,7 +140,7 @@ const ModsListWrapper = ({
     const item = items[index];
 
     const isInstalled = installedMods.find(
-      v => v.modpackId === item?.project_id
+      v => v.projectID === item?.project_id
     );
     const iconUrl = item?.icon_url || '';
 
@@ -161,7 +161,7 @@ const ModsListWrapper = ({
         openModal('ModOverview', {
           modSource: MODRINTH,
           gameVersion,
-          modpackId: item.project_id,
+          projectID: item.project_id,
           ...(isInstalled && { fileID: isInstalled.fileID }),
           ...(isInstalled && { fileName: isInstalled.fileName }),
           instanceName

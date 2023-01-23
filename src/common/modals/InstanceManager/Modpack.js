@@ -20,7 +20,7 @@ import { _getInstancesPath, _getTempPath } from '../../utils/selectors';
 import { makeInstanceRestorePoint } from '../../utils';
 import { CURSEFORGE, FTB, MODRINTH } from '../../utils/constants';
 
-const Modpack = ({ modpackId, instanceName, source, manifest, fileID }) => {
+const Modpack = ({ projectID, instanceName, source, manifest, fileID }) => {
   const [files, setFiles] = useState([]);
   const [versionName, setVersionName] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(null);
@@ -58,10 +58,10 @@ const Modpack = ({ modpackId, instanceName, source, manifest, fileID }) => {
       switch (source) {
         case CURSEFORGE: {
           setVersionName(`${manifest?.name} - ${manifest?.version}`);
-          const data = await getAddonFiles(modpackId);
+          const data = await getAddonFiles(projectID);
           const mappedFiles = await Promise.all(
             data.map(async v => {
-              const changelog = await getAddonFileChangelog(modpackId, v.id);
+              const changelog = await getAddonFileChangelog(projectID, v.id);
               return {
                 ...v,
                 changelog
@@ -72,7 +72,7 @@ const Modpack = ({ modpackId, instanceName, source, manifest, fileID }) => {
           break;
         }
         case FTB: {
-          const ftbModpack = await getFTBModpackData(modpackId);
+          const ftbModpack = await getFTBModpackData(projectID);
 
           setVersionName(
             `${ftbModpack.name} - ${
@@ -82,9 +82,9 @@ const Modpack = ({ modpackId, instanceName, source, manifest, fileID }) => {
 
           const mappedVersions = await Promise.all(
             ftbModpack.versions.map(async version => {
-              const changelog = await getFTBChangelog(modpackId, version.id);
+              const changelog = await getFTBChangelog(projectID, version.id);
               const newModpack = await getFTBModpackVersionData(
-                modpackId,
+                projectID,
                 version.id
               );
 
@@ -104,7 +104,7 @@ const Modpack = ({ modpackId, instanceName, source, manifest, fileID }) => {
           break;
         }
         case MODRINTH: {
-          const modpack = await getModrinthProject(modpackId);
+          const modpack = await getModrinthProject(projectID);
           const versions = (await getModrinthVersions(modpack.versions)).sort(
             (a, b) =>
               Date.parse(b.date_published) - Date.parse(a.date_published)

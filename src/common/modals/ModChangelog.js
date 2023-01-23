@@ -13,7 +13,7 @@ import {
 import { CURSEFORGE, FTB, MODRINTH } from '../utils/constants';
 
 let latest = {};
-const ModChangelog = ({ modpackId, files, type, modpackName }) => {
+const ModChangelog = ({ projectID, files, type, modpackName }) => {
   const [changelog, setChangelog] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
@@ -26,10 +26,10 @@ const ModChangelog = ({ modpackId, files, type, modpackName }) => {
     try {
       switch (type) {
         case FTB:
-          data = await getFTBChangelog(modpackId, id);
+          data = await getFTBChangelog(projectID, id);
           break;
         case CURSEFORGE:
-          data = await getAddonFileChangelog(modpackId, id);
+          data = await getAddonFileChangelog(projectID, id);
           break;
         case MODRINTH:
           data = await getModrinthVersionChangelog(id);

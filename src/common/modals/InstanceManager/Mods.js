@@ -315,9 +315,9 @@ const Row = memo(({ index, style, data }) => {
   } = data;
   const item = items[index];
   const isUpdateAvailable =
-    latestMods[item.modpackId] &&
-    latestMods[item.modpackId].id !== item.fileID &&
-    latestMods[item.modpackId].releaseType <= curseReleaseChannel;
+    latestMods[item.projectID] &&
+    latestMods[item.projectID].id !== item.fileID &&
+    latestMods[item.projectID].releaseType <= curseReleaseChannel;
   const dispatch = useDispatch();
 
   const tempPath = useSelector(_getTempPath);
@@ -371,7 +371,7 @@ const Row = memo(({ index, style, data }) => {
                 dispatch(
                   openModal('ModOverview', {
                     modSource: item.modSource,
-                    modpackId: item.modpackId,
+                    projectID: item.projectID,
                     fileID: item.fileID,
                     fileName: item.fileName,
                     gameVersions,
@@ -417,7 +417,7 @@ const Row = memo(({ index, style, data }) => {
                       updateMod(
                         instanceName,
                         item,
-                        latestMods[item.modpackId].id,
+                        latestMods[item.projectID].id,
                         gameVersions
                       )
                     );
@@ -616,9 +616,9 @@ const Mods = ({ instanceName }) => {
   const hasModUpdates = useMemo(() => {
     return instance?.mods?.find(v => {
       const isUpdateAvailable =
-        latestMods[v.modpackId] &&
-        latestMods[v.modpackId].id !== v.fileID &&
-        latestMods[v.modpackId].releaseType <= curseReleaseChannel;
+        latestMods[v.projectID] &&
+        latestMods[v.projectID].id !== v.fileID &&
+        latestMods[v.projectID].releaseType <= curseReleaseChannel;
       return isUpdateAvailable;
     });
   }, [instance.mods, latestMods]);

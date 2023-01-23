@@ -90,8 +90,8 @@ const Import = ({
     await fse.remove(path.join(tempPath, 'manifest.json'));
     let addon = null;
 
-    if (manifest.modpackId) {
-      const data = await getAddon(manifest.modpackId);
+    if (manifest.projectID) {
+      const data = await getAddon(manifest.projectID);
       addon = data;
       setModpack(addon);
     } else {
@@ -124,8 +124,8 @@ const Import = ({
     if (isForge) loader.loaderType = FORGE;
     else if (isFabric) loader.loaderType = FABRIC;
 
-    if (manifest.modpackId) {
-      loader.modpackId = manifest.modpackId;
+    if (manifest.projectID) {
+      loader.projectID = manifest.projectID;
     }
 
     setVersion(loader);
