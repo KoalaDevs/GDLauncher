@@ -7,6 +7,7 @@ import os from 'os';
 import {
   MOJANG_APIS,
   FORGESVC_URL,
+  FORGESVC_URL_DAVIDE,
   FABRIC_APIS,
   JAVA_MANIFEST_URL,
   IMGUR_CLIENT_ID,
@@ -320,7 +321,7 @@ export const getAddonFile = async (modpackId, fileID) => {
 
 export const getAddonsByFingerprint = async fingerprints => {
   trackCurseForgeAPI();
-  const url = `${FORGESVC_URL}/fingerprints`;
+  const url = `${FORGESVC_URL_DAVIDE}/fingerprints`;
   const { data } = await axioInstance.post(url, { fingerprints });
 
   return data?.data;
