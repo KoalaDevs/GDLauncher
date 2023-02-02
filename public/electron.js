@@ -168,13 +168,7 @@ const userAgent = new UserAgent({
 // app.allowRendererProcessReuse = true;
 Menu.setApplicationMenu(Menu.buildFromTemplate(edit));
 
-const baseUserPath = path.join(app.getPath('appData'), 'gdlauncher_next');
-
-if (!fss.existsSync(baseUserPath)) {
-  fss.mkdirSync(baseUserPath);
-}
-
-app.setPath('userData', baseUserPath);
+app.setPath('userData', path.join(app.getPath('appData'), 'gdlauncher_next'));
 
 let allowUnstableReleases = false;
 const releaseChannelExists = fss.existsSync(
@@ -985,7 +979,7 @@ ipcMain.handle('installUpdateAndQuitOrRestart', async (e, quitAfterInstall) => {
 
     await fs.writeFile(
       path.join(tempFolder, updaterVbs),
-      `Set WshShell = CreateObject("WScript.Shell")
+      `Set WshShell = CreateObject("WScript.Shell") 
           WshShell.Run chr(34) & "${path.join(
             tempFolder,
             updaterBat
