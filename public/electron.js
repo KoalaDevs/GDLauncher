@@ -23,8 +23,8 @@ const {
 } = require('base64url');
 const { URL } = require('url');
 const UserAgent = require('user-agents');
-const nsfw = require('./native/nsfw');
-const napi = require('./native/napi');
+const nsfw = require('./nsfw');
+const napi = require('./native/napi.node');
 
 // console.log(napi.fibonacci(10));
 
@@ -64,8 +64,8 @@ if (gotTheLock) {
   app.quit();
 }
 
-if (!app.isDefaultProtocolClient('KoalaLauncher')) {
-  app.setAsDefaultProtocolClient('KoalaLauncher');
+if (!app.isDefaultProtocolClient('gdlauncher')) {
+  app.setAsDefaultProtocolClient('gdlauncher');
 }
 
 // This gets rid of this: https://github.com/electron/electron/issues/13186
@@ -168,7 +168,13 @@ const userAgent = new UserAgent({
 // app.allowRendererProcessReuse = true;
 Menu.setApplicationMenu(Menu.buildFromTemplate(edit));
 
-app.setPath('userData', path.join(app.getPath('appData'), 'koalalauncher'));
+const baseUserPath = path.join(app.getPath('appData'), 'gdlauncher_next');
+
+if (!fss.existsSync(baseUserPath)) {
+  fss.mkdirSync(baseUserPath);
+}
+
+app.setPath('userData', baseUserPath);
 
 let allowUnstableReleases = false;
 const releaseChannelExists = fss.existsSync(
@@ -241,7 +247,7 @@ const get7zPath = async () => {
     if (process.platform === 'win32') {
       baseDir = path.join(baseDir, '7zip-bin/win/x64');
     } else if (process.platform === 'linux') {
-      baseDir = path.join(baseDir, '7zip-bin/linux/x64');
+      baseDir = path.join(baseDir, '7zip-bin/linux', process.arch);
     } else if (process.platform === 'darwin') {
       baseDir = path.resolve(baseDir, '../../../', '7zip-bin/mac/x64');
     }
@@ -277,7 +283,7 @@ function createWindow() {
     minHeight: 700,
     show: true,
     frame: false,
-    backgroundColor: '#1B2533',
+    backgroundColor: '#3d3d3d',
     webPreferences: {
       experimentalFeatures: true,
       nodeIntegration: true,
@@ -580,20 +586,6 @@ ipcMain.handle('getIsWindowMaximized', () => {
 
 ipcMain.handle('openFolder', (e, folderPath) => {
   shell.openPath(folderPath);
-});
-
-ipcMain.handle('openMainBrowserTo', (e, urls) => {
-  let start;
-  if (process.platform === 'darwin') {
-    start = 'open';
-  } else if (process.platform === 'win32') {
-    start = 'start';
-  } else {
-    start = 'xdg-open';
-  }
-  for (const url of urls) {
-    exec(`${start} ${url}`);
-  }
 });
 
 ipcMain.handle('open-devtools', () => {
@@ -950,7 +942,7 @@ if (process.env.REACT_APP_RELEASE_TYPE === 'setup') {
   autoUpdater.allowPrerelease = allowUnstableReleases;
   autoUpdater.setFeedURL({
     owner: 'KoalaDevs',
-    repo: 'KoalaLauncher',
+    repo: 'GDLauncher',
     provider: 'github'
   });
 
@@ -1015,8 +1007,4 @@ ipcMain.handle('installUpdateAndQuitOrRestart', async (e, quitAfterInstall) => {
     updateSpawn.unref();
     mainWindow.close();
   }
-});
-
-ipcMain.handle('get-instance-cli-arg', () => {
-  return app.commandLine.getSwitchValue('instance');
 });

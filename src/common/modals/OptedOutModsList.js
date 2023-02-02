@@ -3,7 +3,10 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Spin } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import {
+  faExclamationTriangle,
+  faFileDownload
+} from '@fortawesome/free-solid-svg-icons';
 import { ipcRenderer } from 'electron';
 import styled from 'styled-components';
 import Modal from '../components/Modal';
@@ -61,7 +64,8 @@ const ModRow = ({
   loadedMods,
   currentMod,
   missingMods,
-  cloudflareBlock
+  cloudflareBlock,
+  downloadUrl
 }) => {
   const { modManifest, addon } = mod;
   const loaded = loadedMods.includes(modManifest.id);
@@ -84,13 +88,18 @@ const ModRow = ({
     <RowContainer ref={ref}>
       <div>{`${addon?.name} - ${modManifest?.displayName}`}</div>
       {loaded && !missing && !cloudflareBlock && <div className="dot" />}
-      {loaded && (missing || cloudflareBlock) && (
+      {loaded && missing && !cloudflareBlock && (
         <FontAwesomeIcon
           icon={faExclamationTriangle}
           css={`
             color: ${props => props.theme.palette.colors.yellow};
           `}
         />
+      )}
+      {loaded && !missing && cloudflareBlock && (
+        <Button href={downloadUrl}>
+          <FontAwesomeIcon icon={faFileDownload} />
+        </Button>
       )}
       {!loaded && isCurrentMod && (
         <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
@@ -155,7 +164,7 @@ const OptedOutModsList = ({
             setMissingMods(prev => [...prev, status.modId]);
           } else {
             setCloudflareBlock(true);
-            setManualDownloadUrls(prev => [...prev, status.urlDownloadPage]);
+            setManualDownloadUrls(prev => [...prev, status.modId]);
           }
         }
       } else {
@@ -193,39 +202,44 @@ const OptedOutModsList = ({
       title="Opted out mods list"
     >
       <Container>
-        <div
-          css={`
-            text-align: left;
-            margin-bottom: 2rem;
-          `}
-        >
-          Hey oh! It looks like some developers opted out from showing their
-          mods on third-party launchers. We can still attempt to download them
-          automatically. Please click continue and wait for all downloads to
-          finish. Please don&apos;t click anything inside the browser.
-        </div>
+        {!cloudflareBlock && (
+          <div
+            css={`
+              text-align: left;
+              margin-bottom: 2rem;
+            `}
+          >
+            Hey oh! It looks like some developers opted out from showing their
+            mods on third-party launchers. We can still attempt to download them
+            automatically. Please click continue and wait for all downloads to
+            finish. Please don&apos;t click anything inside the browser.
+          </div>
+        )}
         <ModsContainer>
           {optedOutMods &&
-            optedOutMods.map(mod => (
-              <ModRow
-                mod={mod}
-                loadedMods={loadedMods}
-                currentMod={currentMod}
-                missingMods={missingMods}
-                cloudflareBlock={cloudflareBlock}
-              />
-            ))}
+            optedOutMods.map(mod => {
+              return (
+                <ModRow
+                  mod={mod}
+                  loadedMods={loadedMods}
+                  currentMod={currentMod}
+                  missingMods={missingMods}
+                  cloudflareBlock={cloudflareBlock}
+                  downloadUrl={`${mod.addon.links.websiteUrl}/download/${mod.modManifest.id}`}
+                />
+              );
+            })}
         </ModsContainer>
         {cloudflareBlock && (
           <p
             css={`
-              width: 80%;
               margin: 20px auto 0 auto;
             `}
           >
             Cloudflare is currently blocking automated downloads. You can
-            manually download the mods and place them in the mods folder if you
-            want.
+            manually download the mods and place them in the mods folder to
+            continue. Use the download buttons in the rows above, and the button
+            below to open the instance folder.
           </p>
         )}
         <div
@@ -241,7 +255,9 @@ const OptedOutModsList = ({
           <Button
             danger
             type="text"
-            disabled={downloading || loadedMods.length !== 0}
+            disabled={
+              (missingMods.length > 0 && !cloudflareBlock) || downloading
+            }
             onClick={() => {
               dispatch(closeModal());
               setTimeout(
@@ -277,6 +293,7 @@ const OptedOutModsList = ({
                   mods: optedOutMods,
                   instancePath
                 });
+                setDownloading(false);
               }}
               css={`
                 background-color: ${props => props.theme.palette.colors.green};
@@ -302,18 +319,6 @@ const OptedOutModsList = ({
           )}
           {cloudflareBlock && (
             <>
-              <Button
-                type="primary"
-                disabled={downloading}
-                onClick={() => {
-                  ipcRenderer.invoke('openMainBrowserTo', manualDownloadUrls);
-                }}
-                css={`
-                  background-color: ${props => props.theme.palette.colors.blue};
-                `}
-              >
-                Open Browser
-              </Button>
               <Button
                 type="primary"
                 disabled={downloading}
