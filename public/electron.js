@@ -64,8 +64,8 @@ if (gotTheLock) {
   app.quit();
 }
 
-if (!app.isDefaultProtocolClient('gdlauncher')) {
-  app.setAsDefaultProtocolClient('gdlauncher');
+if (!app.isDefaultProtocolClient('koalalauncher')) {
+  app.setAsDefaultProtocolClient('koalalauncher');
 }
 
 // This gets rid of this: https://github.com/electron/electron/issues/13186
@@ -168,7 +168,7 @@ const userAgent = new UserAgent({
 // app.allowRendererProcessReuse = true;
 Menu.setApplicationMenu(Menu.buildFromTemplate(edit));
 
-app.setPath('userData', path.join(app.getPath('appData'), 'gdlauncher_next'));
+app.setPath('userData', path.join(app.getPath('appData'), 'koalalauncher'));
 
 let allowUnstableReleases = false;
 const releaseChannelExists = fss.existsSync(
@@ -936,7 +936,7 @@ if (process.env.REACT_APP_RELEASE_TYPE === 'setup') {
   autoUpdater.allowPrerelease = allowUnstableReleases;
   autoUpdater.setFeedURL({
     owner: 'KoalaDevs',
-    repo: 'GDLauncher',
+    repo: 'koalalauncher',
     provider: 'github'
   });
 
