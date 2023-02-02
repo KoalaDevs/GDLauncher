@@ -1,6 +1,7 @@
-# Koala Launcher [![Discord][discordImg]][discordLink] [![CI][ciImg]][ciLink] [![GHReleases][ghrImg]][ghrLink]
+# Koala Launcher [![Discord][discordImg]][discordLink] [![CI][ciImg]][ciLink] [![GHReleases][ghrImg]][ghrLink] 
 
-![Javascript][javascriptImg] ![Love][buildLoveImg]
+### ![GPL3][gpl3Img] ![Javascript][javascriptImg]
+### ![Love][buildLoveImg] ![Black magic][blackMagicImg] ![Tree Nuts][treeNutsImg] ![Cat GIFS][catGifsImg]
 
 # ❓ What is the Koala Launcher
 Koala Launcher is a fork of KoalaLauncher aiming to be more FOSS Friendy towards Pull Requests and Contribution
@@ -112,11 +113,16 @@ This project is licensed under the GNU GPL V3.0 - see the [LICENSE](LICENSE) fil
 [discordImg]: https://img.shields.io/discord/759861708084215838.svg?logo=discord&logoWidth=18&colorB=7289DA&style=for-the-badge
 [discordLink]: https://invite.gg/KoalaDevs
 
-[ciImg]: https://img.shields.io/github/workflow/status/KoalaDevs/KoalaLauncher/Linux%20CI?style=for-the-badge
+[ciImg]: https://img.shields.io/github/actions/workflow/status/KoalaDevs/KoalaLauncher/nodejs.yml?branch=master&style=for-the-badge
 [ciLink]: https://github.com/KoalaDevs/KoalaLauncher/actions
 
 [ghrImg]: https://img.shields.io/github/downloads/KoalaDevs/KoalaLauncher/total?style=for-the-badge
-[ghrlink]: https://github.com/CrankySupertoon/KoalaLauncher/releases
+[ghrlink]: https://github.com/KoalaDevs/KoalaLauncher/releases
 
-[javascriptImg]: https://forthebadge.com/images/badges/made-with-javascript.svg
+[gpl3Img]: https://raw.githubusercontent.com/KoalaDevs/KoalaLauncher/master/public/gpl-3.svg
+
+[javascriptImg]: https://raw.githubusercontent.com/KoalaDevs/KoalaLauncher/master/public/made-with-electron-js%20(1).svg
+[blackMagicImg]: https://forthebadge.com/images/badges/powered-by-black-magic.svg
 [buildLoveImg]: https://forthebadge.com/images/badges/built-with-love.svg
+[treeNutsImg]: https://forthebadge.com/images/badges/does-not-contain-treenuts.svg
+[catGifsImg]: https://forthebadge.com/images/badges/contains-cat-gifs.svg
