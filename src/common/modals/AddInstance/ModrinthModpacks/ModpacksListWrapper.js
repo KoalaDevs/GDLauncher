@@ -11,14 +11,14 @@ import { MODRINTH } from '../../../utils/constants';
 import { getModrinthProject, getModrinthProjectVersions } from '../../../api';
 
 const selectModrinthModpack = async (
-  modpackId,
+  projectID,
   setVersion,
   setModpack,
   setStep
 ) => {
   // with a bit more fiddling the `getModrinthProject` call can be removed
-  const modpack = await getModrinthProject(modpackId);
-  const version = (await getModrinthProjectVersions(modpackId)).sort(
+  const modpack = await getModrinthProject(projectID);
+  const version = (await getModrinthProjectVersions(projectID)).sort(
     (a, b) => Date.parse(b.date_published) - Date.parse(a.date_published)
   )[0];
 
@@ -30,7 +30,7 @@ const selectModrinthModpack = async (
   setVersion({
     loaderType,
     mcVersion,
-    modpackId,
+    projectID,
     fileID: version.id,
     source: MODRINTH
   });
