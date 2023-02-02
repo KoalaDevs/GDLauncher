@@ -11,7 +11,8 @@
     "redux",
     "reload",
     "sass",
-    "webpack"
+    "webpack",
+    "gdlauncher"
   ],
   "bugs": {
     "url": "https://github.com/KoalaDevs/KoalaLauncher/issues"
@@ -22,9 +23,9 @@
   },
   "license": "GPL-3.0",
   "author": {
-    "name": "GorillaDevs",
-    "email": "davide@gdevs.io",
-    "url": "https://gdevs.io"
+    "name": "KoalaDevs",
+    "email": "naylahanegan@gmail.com",
+    "url": "https://koaladevs.netlify.com"
   },
   "private": false,
   "homepage": "./",
