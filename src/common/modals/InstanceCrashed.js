@@ -12,7 +12,7 @@ import { pasteBinPost } from '../api';
 import { _getInstancesPath } from '../utils/selectors';
 
 import Modal from '../components/Modal';
-import Logo from '../../ui/LogoSad';
+import Logo from '../../ui/Logo';
 
 const calcError = code => {
   switch (code) {

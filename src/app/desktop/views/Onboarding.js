@@ -147,8 +147,6 @@ const Home = () => {
           `}
         >
           KoalaLauncher is completely free and open source. <br />
-          If you want to support us, consider renting a server on BisectHosting,
-          our official partner!
           <br />
           <br />
         </div>
@@ -173,16 +171,7 @@ const Home = () => {
             margin: 20%;
           `}
         >
-          Or you can also support us through Ko-Fi.
-          <div
-            css={`
-              margin: 40px;
-            `}
-          >
-            <a href="https://ko-fi.com/KoalaLauncher">
-              <img src={KoFiButton} alt="Ko-Fi" />
-            </a>
-          </div>
+          Feel free to contribute on GitHub.
         </div>
       </div>
       <div
@@ -215,7 +204,7 @@ const Home = () => {
             css={`
               margin-top: 40px;
             `}
-            src="https://discordapp.com/widget?id=398091532881756161&theme=dark"
+            src="https://discordapp.com/widget?id=759861708084215838&theme=dark"
             width="350"
             height="410"
             allowTransparency="true"

@@ -177,7 +177,7 @@ const SystemNavbar = () => {
           `}
         >
           <a
-            href="https://gdevs.io/"
+            href="https://koalalauncher.com/"
             rel="noopener noreferrer"
             css={`
               margin-top: 5px;
