@@ -121,7 +121,7 @@ This project is licensed under the GNU GPL V3.0 - see the [LICENSE](LICENSE) fil
 
 [gpl3Img]: https://raw.githubusercontent.com/KoalaDevs/KoalaLauncher/master/public/gpl-3.svg
 
-[javascriptImg]: https://raw.githubusercontent.com/KoalaDevs/KoalaLauncher/master/public/made-with-electron-js%20(1).svg
+[javascriptImg]: https://raw.githubusercontent.com/KoalaDevs/KoalaLauncher/master/public/made-with-electron-js.svg
 [blackMagicImg]: https://forthebadge.com/images/badges/powered-by-black-magic.svg
 [buildLoveImg]: https://forthebadge.com/images/badges/built-with-love.svg
 [treeNutsImg]: https://forthebadge.com/images/badges/does-not-contain-treenuts.svg
