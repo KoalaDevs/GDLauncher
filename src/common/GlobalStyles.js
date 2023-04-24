@@ -14,7 +14,7 @@ export default createGlobalStyle`
   }
   
   #root {
-    font-family: Dongle, Roboto, Helvetica, sans-serif;
+    font-family: Kanit, Roboto, Helvetica, sans-serif;
     font-size: 14px;
     height: 100%;
     overflow: hidden;

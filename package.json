@@ -218,7 +218,7 @@
         "slate-react": "^0.65.3",
         "styled-components": "^5.3.0",
         "symlink-dir": "^5.0.1",
-        "@fontsource/dongle": "^4.5.8",
+        "@fontsource/kanit": "^4.5.8",
         "typeface-roboto": "^1.1.13",
         "use-debounce": "^7.0.0",
         "user-agents": "^1.0.1048",
