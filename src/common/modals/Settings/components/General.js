@@ -610,13 +610,15 @@ const General = () => {
               margin-left: 10px;
             `}
           >
-            v {version}
           </div>
         </div>
         <p>
+           v {version}
+        </p>
+        <p>
           {updateAvailable
             ? 'There is an update available to be installed. Click on update to install it and restart the launcher.'
-            : 'You’re currently on the latest version. We automatically check for updates and we will inform you whenever one is available.'}
+            : 'You’re currently on the latest version.  We automatically check for updates and we will inform you whenever one is available.'}
         </p>
         <div
           css={`

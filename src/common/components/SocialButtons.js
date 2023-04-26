@@ -38,7 +38,7 @@ const SocialButtons = () => {
         }
       `}
     >
-      <a href="https://discord.gdlauncher.com">
+      <a href="https://invite.gg/koalalauncher">
         <div>
           <FontAwesomeIcon icon={faDiscord} size="lg" />
         </div>
@@ -53,7 +53,7 @@ const SocialButtons = () => {
           <FontAwesomeIcon icon={faTwitter} size="lg" />
         </div>
       </a>
-      <a href="https://facebook.com/gorilladevs">
+      <a href="https://facebook.com/KoalaLauncher">
         <div>
           <FontAwesomeIcon icon={faFacebook} size="lg" />
         </div>
@@ -63,7 +63,7 @@ const SocialButtons = () => {
           <FontAwesomeIcon icon={faInstagram} size="lg" />
         </div>
       </a>
-      <a href="https://gdevs.io">
+      <a href="https://koalalauncher.com">
         <div>
           <FontAwesomeIcon icon={faGlobe} size="lg" />
         </div>

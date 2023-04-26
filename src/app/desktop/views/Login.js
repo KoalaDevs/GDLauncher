@@ -311,7 +311,7 @@ const Login = () => {
                 </div>
               </div>
               <Status>
-                {'   '}Auth:{' '}
+                {'          '}Auth:{' '}
                 <StatusIcon color={status['authserver.mojang.com']} />
                 Session: <StatusIcon color={status['session.minecraft.net']} />
                 Skins: <StatusIcon color={status['textures.minecraft.net']} />

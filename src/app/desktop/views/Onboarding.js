@@ -8,9 +8,7 @@ import {
   faLongArrowAltUp,
   faLongArrowAltDown
 } from '@fortawesome/free-solid-svg-icons';
-import backgroundVideo from '../../../common/assets/onboarding.webm';
 import { _getCurrentAccount } from '../../../common/utils/selectors';
-import KoFiButton from '../../../common/assets/ko-fi.png';
 
 const Background = styled.div`
   position: absolute;
@@ -59,13 +57,6 @@ const Home = () => {
     }
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      setInitScrolled(true);
-      executeScroll(1);
-    }, 4800);
-  }, []);
-
   return (
     <Background>
       <div
@@ -92,15 +83,6 @@ const Home = () => {
             align-items: center;
           `}
         >
-          <video
-            autoPlay
-            muted
-            css={`
-              height: 100vh;
-            `}
-          >
-            <source src={backgroundVideo} type="video/webm" />
-          </video>
         </div>
       </div>
       <div

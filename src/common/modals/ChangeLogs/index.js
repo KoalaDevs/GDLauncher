@@ -9,8 +9,6 @@ import { useInView } from 'react-intersection-observer';
 import Modal from '../../components/Modal';
 import SocialButtons from '../../components/SocialButtons';
 import KoFiButton from '../../assets/ko-fi.png';
-import UpdateIllustration from '../../assets/update_illustration.png';
-import UpdateIllustrationChristmas from '../../assets/update_illustration_christmas.png';
 import ga from '../../utils/analytics';
 import changelog from './changeLog';
 
@@ -141,61 +139,6 @@ const ChangeLogs = () => {
     >
       <Container>
         <Header>
-          {isChristmas ? (
-            <div
-              css={`
-                width: 430px;
-              `}
-            >
-              <h1
-                css={`
-                  font-weight: bold;
-                `}
-              >
-                <TypeAnimation
-                  cursor={false}
-                  sequence={typingSequence.merryChristmas}
-                  wrapper="span"
-                />{' '}
-                <span
-                  css={`
-                    font-size: 16px;
-                    font-weight: normal;
-                  `}
-                >
-                  <TypeAnimation
-                    cursor={false}
-                    sequence={typingSequence.fromGDL}
-                    wrapper="span"
-                  />
-                </span>
-              </h1>
-            </div>
-          ) : (
-            ''
-          )}
-          <img
-            css={`
-              border-radius: 5px;
-              width: 401px;
-            `}
-            src={isChristmas ? UpdateIllustrationChristmas : UpdateIllustration}
-            alt="New Version"
-          />
-          <div
-            css={`
-              margin-top: 20px;
-              color: ${props => props.theme.palette.text.third};
-              span {
-                color: ${props => props.theme.palette.text.primary};
-                cursor: pointer;
-                text-decoration: underline;
-              }
-            `}
-          >
-            If you appreciate our work, please consider supporting us through a
-            donation or grab a server from our official partner{' '}
-          </div>
           <div
             css={`
               display: flex;
